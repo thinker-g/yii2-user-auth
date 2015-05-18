@@ -21,22 +21,24 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php if ($model->user): ?>
-        <h3>Owner user:</h3>
-        <?= DetailView::widget([
-            'model' => $model->user,
-            'attributes' => [
-                'id',
-                'username',
-                'primary_email',
-                'password_hash',
-                [
-                    'attribute' => 'status',
-                    'value' => $model->user->availableStatus()[$model->user->status]
-                ],
-                'created_at',
-                'last_login_at'
-            ]
-        ]) ?>
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Owner user:</strong></div><!-- $.panel-heading -->
+            <?= DetailView::widget([
+                'model' => $model->user,
+                'attributes' => [
+                    'id',
+                    'username',
+                    'primary_email',
+                    'password_hash',
+                    [
+                        'attribute' => 'status',
+                        'value' => $model->user->availableStatus()[$model->user->status]
+                    ],
+                    'created_at',
+                    'last_login_at'
+                ]
+            ]) ?>
+        </div><!-- $.pandel.panel-default -->
     <?php endif; ?>
     <?= $this->render('_form', [
         'model' => $model,
