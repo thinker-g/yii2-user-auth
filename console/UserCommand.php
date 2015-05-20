@@ -4,6 +4,7 @@ namespace thinker_g\UserAuth\console;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
+use thinker_g\UserAuth\models\User;
 
 /**
  * User add command.
@@ -15,17 +16,22 @@ class UserCommand extends Controller
     public $userModel = 'thinker_g\UserAuth\models\User';
     public $superAgentAcctModel = 'thinker_g\UserAuth\models\SuperAgentAccount';
 
-    public $username;
-    public $password;
-    public $userid;
+    /**
+     * @var string Status of the user, default to "pending" status.
+     */
+    public $status = User::STATUS_PENDING;
+
+    /**
+     * @var string Primary email of the user.
+     */
+    public $email;
 
     public function options($actionID)
     {
         $options = [
-            'add' => ['username', 'password'],
-            'grant-super-agent' => ['userid', 'password']
+            'add' => ['email', 'status'],
         ];
-        return $options[$actionID];
+        return isset($options[$actionID]) ? $options[$actionID] : [];
     }
 
     /**
@@ -39,55 +45,58 @@ class UserCommand extends Controller
     }
 
     /**
-     * Add a user. Options [[username]] and [[password]] must be specified.
+     * Add a user. This is mainly for adding the very first user of the website.
+     * @param string $username Username to add.
+     * @param string $password Password of the user.
      * @return boolean
      */
-    public function actionAdd()
+    public function actionAdd($username, $password)
     {
         $user = Yii::createObject($this->userModel);
         // $user = new \thinker_g\UserAuth\models\User();
-        $user->username = $this->username;
-        $user->password = $this->password;
-        $user->status = $user::STATUS_ACTIVE;
-        $user->validate(['username', 'password']);
-        if ($return = !$user->hasErrors()) {
-            if ($return = $user->save(false)) {
-                $this->stdout("Added user: [{$user->id}]{$user->username}." . PHP_EOL, Console::FG_GREEN);
-            } else {
-                $this->stdout("Fail to add user: {$user->username}." . PHP_EOL, Console::FG_RED);
-            }
+        $user->username = $username;
+        $user->password = $password;
+        
+        if ($user->hasAttribute('primary_email')) {
+            $user->primary_email = $this->email;
+        }
+        if ($user->hasAttribute('status')) {
+            $user->status = $this->status;
+        }
+        if ($isSucceeded = $user->save()) {
+            $this->stdout("Added user: [{$user->id}]{$username}." . PHP_EOL, Console::FG_GREEN);
         } else {
+            $this->stdout("Fail to add user: {$username}." . PHP_EOL, Console::FG_RED);
             foreach ($user->getErrors() as $errs)
                 $errors[] = implode($errs, PHP_EOL);
             $this->stderr(implode(PHP_EOL, $errors) . PHP_EOL, Console::FG_RED);
         }
-        return $return;
+        return $isSucceeded ? self::EXIT_CODE_NORMAL : self::EXIT_CODE_ERROR;
     }
 
     /**
-     * Grant a user a super agent account. Options [[userid]] and [[password]] must be specified.
+     * Grant a super agent account with a new password to an exsiting user ID.
+     * @param int $user_id Target user ID.
+     * @param string $super_password Super password of this user for logging in backend of the site.
      * @return boolean
      */
-    public function actionGrantSuperAgent()
+    public function actionGrantSuperAgent($user_id, $super_password)
     {
         $superAgentAcct = Yii::createObject($this->superAgentAcctModel);
         // $superAgentAcct = new \thinker_g\UserAuth\models\SuperAgentAccount();
         $superAgentAcct->from_source = $superAgentAcct::SRC_SUPER_AGENT;
-        $superAgentAcct->user_id = $this->userid;
-        $superAgentAcct->password = $this->password;
-        $superAgentAcct->validate(['user_id', 'password']);
-        if ($return = !$superAgentAcct->hasErrors()) {
-            if ($return = $superAgentAcct->save(false)) {
-                $this->stdout("Super agent granted." . PHP_EOL, Console::FG_GREEN);
-            } else {
-                $this->stdout("Operation failed." . PHP_EOL, Console::FG_RED);
-            }
+        $superAgentAcct->user_id = $user_id;
+        $superAgentAcct->password = $super_password;
+        if ($isSucceeded = $superAgentAcct->save()) {
+            $this->stdout("Super agent granted." . PHP_EOL, Console::FG_GREEN);
         } else {
+            $this->stdout("Operation failed." . PHP_EOL, Console::FG_RED);
             foreach ($superAgentAcct->getErrors() as $errs)
                 $errors[] = implode($errs, PHP_EOL);
             $this->stderr(implode(PHP_EOL, $errors) . PHP_EOL, Console::FG_RED);
         }
-        return $return;
+        
+        return $isSucceeded ? self::EXIT_CODE_NORMAL : self::EXIT_CODE_ERROR;
     }
 }
 
