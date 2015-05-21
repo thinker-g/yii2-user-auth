@@ -3,6 +3,8 @@ namespace thinker_g\UserAuth\controllers\front;
 
 use Yii;
 use thinker_g\UserAuth\controllers\BaseAuthController;
+use yii\base\InvalidParamException;
+use yii\web\BadRequestHttpException;
 
 /**
  *
@@ -38,7 +40,10 @@ class AuthController extends BaseAuthController
 
                 return $this->goHome();
             } else {
-                Yii::$app->getSession()->setFlash('error', 'Sorry, we are unable to reset password for email provided.');
+                Yii::$app->getSession()->setFlash(
+                    'error',
+                    'Sorry, we are unable to reset password for the provided email.'
+                );
             }
         }
 
@@ -50,7 +55,7 @@ class AuthController extends BaseAuthController
     public function actionResetPassword($token)
     {
         try {
-            if (!is_array($this->module->modelResetPasswordForm)) {
+            if (is_string($this->module->modelResetPasswordForm)) {
                 $this->module->modelResetPasswordForm = [
                     'class' => $this->module->modelResetPasswordForm
                 ];
@@ -62,7 +67,7 @@ class AuthController extends BaseAuthController
         }
 
         if ($model->load(Yii::$app->request->post()) && $model->validate() && $model->resetPassword()) {
-            Yii::$app->getSession()->setFlash('success', 'New password was saved.');
+            Yii::$app->getSession()->setFlash('success', 'Your password has been successfully reset.');
 
             return $this->goHome();
         }

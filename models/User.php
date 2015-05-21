@@ -3,10 +3,8 @@ namespace thinker_g\UserAuth\models;
 
 use Yii;
 use yii\base\NotSupportedException;
-use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use yii\db\Expression as DbExpression;
 use yii\db\ActiveQuery;
 
 /**
@@ -53,7 +51,7 @@ class User extends ActiveRecord implements IdentityInterface
      * Number of seconds before the password reset token is expired.
      * @var int
      */
-    public $passwordResetTokenExpire = 1800;
+    public static $passwordResetTokenExpire = 1800;
 
     /**
      * Attribute to temporarily store password.
@@ -175,7 +173,7 @@ class User extends ActiveRecord implements IdentityInterface
         if (empty($token)) {
             return false;
         }
-        $expire = $this->passwordResetTokenExpire;
+        $expire = self::$passwordResetTokenExpire;
         $parts = explode('_', $token);
         $timestamp = (int) end($parts);
         return $timestamp + $expire >= time();

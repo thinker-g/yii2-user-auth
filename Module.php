@@ -30,7 +30,7 @@ class Module extends \yii\base\Module
 
     public $mvMap = [
         'auth' => [
-            'request-password-reset' => ['view' => 'requestPasswordResetToken'],
+            'request-password-reset' => ['view' => 'requestPasswordReset'],
             'reset-password' => ['view' => 'resetPassword']
         ]
     ];
