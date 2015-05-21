@@ -43,11 +43,17 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_PENDING = 10;
 
     /**
-     * User is active. Means normal users who completed all their onboarding procedure.
+     * User is active, means normal users who completed all their onboarding procedure.
      * For further usage, status code 20-29 is preserved for unavailable status.
      * @var int
      */
     const STATUS_ACTIVE = 20;
+
+    /**
+     * Number of seconds before the password reset token is expired.
+     * @var int
+     */
+    public $passwordResetTokenExpire = 1800;
 
     /**
      * Attribute to temporarily store password.
@@ -169,7 +175,7 @@ class User extends ActiveRecord implements IdentityInterface
         if (empty($token)) {
             return false;
         }
-        $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+        $expire = $this->passwordResetTokenExpire;
         $parts = explode('_', $token);
         $timestamp = (int) end($parts);
         return $timestamp + $expire >= time();
