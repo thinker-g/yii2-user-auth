@@ -23,7 +23,6 @@ use yii\validators\EmailValidator;
  * @property integer $created_at
  * @property integer $updated_at
  * @property array $userExtAccounts
- * @todo Needs to update phpdoc comments.
  */
 class User extends ActiveRecord implements IdentityInterface, CredentialInterface
 {
@@ -111,9 +110,9 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
         ];
     }
 
-
     /**
      * @inheritdoc
+     * @see \yii\web\IdentityInterface::findIdentity()
      */
     public static function findIdentity($id)
     {
@@ -126,6 +125,7 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
 
     /**
      * @inheritdoc
+     * @see \yii\web\IdentityInterface::findIdentityByAccessToken()
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -149,9 +149,8 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
 
     /**
      * Finds user by password reset token
-     *
-     * @param string $token password reset token
-     * @return static|null
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::findByPasswordResetToken()
      */
     public static function findByPasswordResetToken($token)
     {
@@ -167,10 +166,8 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
     }
 
     /**
-     * Finds out if password reset token is valid
-     *
-     * @param string $token password reset token
-     * @return boolean
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::isPasswordResetTokenValid()
      */
     public static function isPasswordResetTokenValid($token)
     {
@@ -185,6 +182,7 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
 
     /**
      * @inheritdoc
+     * @see \yii\web\IdentityInterface::getId()
      */
     public function getId()
     {
@@ -193,6 +191,7 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
 
     /**
      * @inheritdoc
+     * @see \yii\web\IdentityInterface::getAuthKey()
      */
     public function getAuthKey()
     {
@@ -201,6 +200,7 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
 
     /**
      * @inheritdoc
+     * @see \yii\web\IdentityInterface::validateAuthKey()
      */
     public function validateAuthKey($authKey)
     {
@@ -208,10 +208,8 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
     }
 
     /**
-     * Validates password.
-     *
-     * @param string $password password to validate
-     * @return boolean if password provided is valid for current user
+     * @inheritdoc
+     * @see \yii\web\IdentityInterface::validatePassword()
      */
     public function validatePassword($password)
     {
@@ -219,11 +217,8 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
     }
 
     /**
-     * Generates password hash from password and sets it to the model.
-     * **Note:** Every time the password is reset the "authKey" will be regenrated
-     * as the old credential info are all considered unsafe.
-     *
-     * @param string $password
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::setPassword()
      */
     public function setPassword($password)
     {
@@ -234,9 +229,8 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
     }
 
     /**
-     * Password Getter
-     *
-     * @return string $password
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::getPassword()
      */
     public function getPassword()
     {
@@ -244,7 +238,7 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
     }
 
     /**
-     * Generates "remember me" authentication key
+     * Generates "remember me" authentication key.
      */
     public function generateAuthKey()
     {
@@ -252,7 +246,8 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
     }
 
     /**
-     * Generates new password reset token
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::generatePasswordResetToken()
      */
     public function generatePasswordResetToken()
     {
@@ -260,7 +255,8 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
     }
 
     /**
-     * Removes password reset token
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::removePasswordResetToken()
      */
     public function removePasswordResetToken()
     {
