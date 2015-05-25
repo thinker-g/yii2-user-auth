@@ -79,15 +79,16 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
             [['username', 'primary_email'], 'unique'],
             [['username', 'primary_email'], 'trim'],
             [['primary_email'], 'email'],
-            [['password', 'created_at', 'last_login_at'], 'safe'],
+            [['username', 'password', 'primary_email'], 'string', 'min' => 5, 'max' => 255],
+            [['password_hash', 'password_reset_token'], 'string', 'max' => 255],
+            [['auth_key'], 'string', 'max' => 64],
             [['status'], 'default', 'value' => self::STATUS_PENDING],
             [['status'], 'in', 'range' => [
                 self::STATUS_PENDING,
                 self::STATUS_ACTIVE,
                 self::STATUS_DELETED
             ]],
-            [['username', 'primary_email', 'password_hash', 'password_reset_token'], 'string', 'max' => 255],
-            [['auth_key'], 'string', 'max' => 64]
+            [['created_at', 'last_login_at'], 'safe'],
         ];
     }
 

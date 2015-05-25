@@ -9,8 +9,36 @@ use Yii;
  */
 class SignupForm extends Model
 {
+    /**
+     * User model configuration.
+     * @var string|array
+     */
     public $userModelClass = 'thinker_g\UserAuth\models\User';
+
+    /**
+     * Attribute map between this class and the configured user model class,
+     * where keys are the form model attributes and corresponding values belong to the specified user model.
+     * This will be used to assign values from the form to the created user model for saving data.
+     * @var array
+     */
+    public $userAttrMap = [
+        'username' => 'username',
+        'password' => 'password',
+        'email' => 'primary_email'
+    ];
+
+    /**
+     * Names listed in this array won't be allowed to register.
+     * @var array
+     */
     public $reservedUsernames;
+
+    /**
+     * Emails listed in this array won't be allowed to register.
+     * @var array
+     */
+    public $reservedEmails;
+
     public $username;
     public $email;
     public $password;
@@ -27,7 +55,12 @@ class SignupForm extends Model
             ['username', 'in',
                 'not' => true,
                 'range' => $this->reservedUsernames ? $this->reservedUsernames : [],
-                'message' => '{attribute} "{value}" is reserved for system usage, you cannot use it.'
+                'message' => '{attribute} "{value}" is reserved for system usage, please choose another one.'
+            ],
+            ['email', 'in',
+                'not' => true,
+                'range' => $this->reservedEmails ? $this->reservedEmails : [],
+                'message' => '{attribute} "{value}" is reserved for system usage, please choose another one.'
             ],
             ['username', 'unique',
                 'targetClass' => $this->userModelClass,
@@ -37,8 +70,7 @@ class SignupForm extends Model
                 'targetAttribute' => 'primary_email',
                 'message' => 'This email address has already been taken.'
             ],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-            ['password', 'string', 'min' => 5],
+            [['username','password'], 'string', 'min' => 5, 'max' => 255],
             ['email', 'email'],
             ['repeatPassword', 'compare', 'compareAttribute' => 'password'],
         ];
@@ -52,10 +84,16 @@ class SignupForm extends Model
     public function signup()
     {
         if ($this->validate()) {
-            $user = new $this->userModelClass;
-            $user->username = $this->username;
-            $user->primary_email = $this->email;
-            $user->setPassword($this->password);
+            $user = Yii::createObject($this->userModelClass);
+            if (!$userModel instanceof CredentialInterface) {
+                throw new NotSupportedException(
+                    get_class($user)
+                    . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\CredentialInterface.'
+                );
+            }
+            foreach ($this->userAttrMap as $formAttr => $userAttr) {
+                $user->{$userAttr} = $this->{$formAttr};
+            }
             if ($user->save()) {
                 return $user;
             }

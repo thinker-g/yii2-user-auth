@@ -3,16 +3,38 @@ namespace thinker_g\UserAuth\models;
 
 use Yii;
 use yii\base\Model;
+use thinker_g\UserAuth\interfaces\CredentialInterface;
+use yii\base\NotSupportedException;
 
 /**
  * Login form
  */
 class LoginForm extends Model
 {
+    /**
+     * User model class name.
+     * The class must implement interface \thinker_g\UserAuth\interfaces\CredentialInterface .
+     * @var string
+     */
     public $userModelClass = 'thinker_g\UserAuth\models\User';
+
     public $username;
+
     public $password;
+
+    /**
+     * Whether to keep current user logged in.
+     * See option [[autoLoginDuration]] for the duration.
+     * @var bool
+     */
     public $rememberMe = true;
+
+    /**
+     * How long, in seconds, to keep current user logged in.
+     * Default to 7 days. This parameter will only be read when [[rememberMe]] is true.
+     * @var int
+     */
+    public $keepLoginDuration;
 
     private $_user = false;
 
@@ -62,7 +84,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? $this->keepLoginDuration : 0);
         } else {
             return false;
         }
@@ -76,7 +98,13 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $userModel = $this->userModelClass;
+            $userModel = Yii::createObject($this->userModelClass);
+            if (!$userModel instanceof CredentialInterface) {
+                throw new NotSupportedException(
+                    get_class($userModel)
+                    . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\CredentialInterface.'
+                );
+            }
             $this->_user = $userModel::findByLogin($this->username);
         }
 
