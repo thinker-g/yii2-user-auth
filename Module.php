@@ -34,7 +34,7 @@ class Module extends \yii\base\Module
      * Default configuration is for backend management console.
      * @var array
      */
-    public $baseBackendNavMenu = [
+    public $sidebarMenu = [
         ['label' => 'Splash page', 'url'=>['default/index']],
         ['label' => 'Users', 'url'=>['user/index']],
         ['label' => 'External Accounts', 'url' => ['user-ext-account/index']],
@@ -129,4 +129,16 @@ class Module extends \yii\base\Module
             ]
         ],
     ];
+
+    /**
+     * @inheritdoc
+     * @see \yii\base\Module::beforeAction()
+     */
+    public function beforeAction($action)
+    {
+        $continue = parent::beforeAction($action);
+        $action->controller->getView()->params['sidebarMenu'] = $this->sidebarMenu;
+        return $continue;
+    }
+
 }

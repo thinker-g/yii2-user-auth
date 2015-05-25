@@ -35,14 +35,4 @@ abstract class BaseAdminController extends CrudController
             ],
         ];
     }
-
-    /**
-     * @inheritdoc
-     * @see \yii\base\Object::init()
-     */
-    public function init()
-    {
-        parent::init();
-        $this->getView()->params['sidebarMenu'] = $this->module->baseBackendNavMenu;
-    }
 }
