@@ -13,19 +13,33 @@ use thinker_g\UserAuth\models\User;
  */
 class UserCommand extends Controller
 {
+    /**
+     * User model configuration.
+     * @var string|array
+     */
     public $userModel = 'thinker_g\UserAuth\models\User';
+    /**
+     * Super agent account model configuration.
+     * @var unknown
+     */
     public $superAgentAcctModel = 'thinker_g\UserAuth\models\SuperAgentAccount';
 
     /**
-     * @var string Status of the user, default to "pending" status.
+     * Status of the user, default to "pending" status.
+     * @var string
      */
     public $status = User::STATUS_PENDING;
 
     /**
-     * @var string Primary email of the user.
+     * Primary email of the user.
+     * @var string
      */
     public $email;
 
+    /**
+     * @inheritdoc
+     * @see \yii\console\Controller::options()
+     */
     public function options($actionID)
     {
         $options = [
@@ -56,7 +70,7 @@ class UserCommand extends Controller
         // $user = new \thinker_g\UserAuth\models\User();
         $user->username = $username;
         $user->password = $password;
-        
+
         if ($user->hasAttribute('primary_email')) {
             $user->primary_email = $this->email;
         }
@@ -95,7 +109,7 @@ class UserCommand extends Controller
                 $errors[] = implode($errs, PHP_EOL);
             $this->stderr(implode(PHP_EOL, $errors) . PHP_EOL, Console::FG_RED);
         }
-        
+
         return $isSucceeded ? self::EXIT_CODE_NORMAL : self::EXIT_CODE_ERROR;
     }
 }

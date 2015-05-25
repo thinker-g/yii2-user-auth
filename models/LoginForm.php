@@ -50,7 +50,7 @@ class LoginForm extends Model
                 }
                 $this->addError($attribute, $errMsg);
             }
-            
+
         }
     }
 

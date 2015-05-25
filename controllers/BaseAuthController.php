@@ -13,6 +13,10 @@ use yii\filters\AccessControl;
  */
 abstract class BaseAuthController extends CrudController
 {
+    /**
+     * @inheritdoc
+     * @var string
+     */
     public $moduleAttr = 'mvMap';
 
     /**
@@ -41,6 +45,10 @@ abstract class BaseAuthController extends CrudController
         ];
     }
 
+    /**
+     * Login action.
+     * @return \yii\web\Response|string
+     */
     public function actionLogin()
     {
         if (!\Yii::$app->user->isGuest) {
@@ -51,12 +59,14 @@ abstract class BaseAuthController extends CrudController
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {
-            return $this->render($this->viewID, [
-                'model' => $model,
-            ]);
+            return $this->render($this->viewID, ['model' => $model]);
         }
     }
 
+    /**
+     * Logout action
+     * @return \yii\web\Response
+     */
     public function actionLogout()
     {
         Yii::$app->user->logout();

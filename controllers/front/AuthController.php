@@ -7,14 +7,21 @@ use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 
 /**
+ * Frontend auth controller, provides in addition the password reset actions.
  *
  * @author Thinker_g
- *
  */
 class AuthController extends BaseAuthController
 {
+    /**
+     * @inheritdoc
+     * @var string
+     */
     public $defaultAction = 'login';
 
+    /**
+     * Signup action.
+     */
     public function actionSignup()
     {
         $model = Yii::createObject($this->module->modelSignupForm);
@@ -31,6 +38,10 @@ class AuthController extends BaseAuthController
         ]);
     }
 
+    /**
+     * Request password reset action.
+     * @return \yii\web\Response|string
+     */
     public function actionRequestPasswordReset()
     {
         $model = Yii::createObject($this->module->modelPasswordResetRequestForm);
@@ -52,6 +63,12 @@ class AuthController extends BaseAuthController
         ]);
     }
 
+    /**
+     * Reset password action
+     * @param string $token
+     * @throws BadRequestHttpException
+     * @return \yii\web\Response|string
+     */
     public function actionResetPassword($token)
     {
         try {
