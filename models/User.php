@@ -6,6 +6,8 @@ use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use yii\db\ActiveQuery;
+use thinker_g\UserAuth\interfaces\CredentialInterface;
+use yii\validators\EmailValidator;
 
 /**
  * User model
@@ -21,9 +23,9 @@ use yii\db\ActiveQuery;
  * @property integer $created_at
  * @property integer $updated_at
  * @property array $userExtAccounts
- *
+ * @todo Needs to update phpdoc comments.
  */
-class User extends ActiveRecord implements IdentityInterface
+class User extends ActiveRecord implements IdentityInterface, CredentialInterface
 {
     /**
      * User is deleted.
@@ -76,6 +78,8 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             [['username', 'primary_email'], 'unique'],
+            [['username', 'primary_email'], 'trim'],
+            [['primary_email'], 'email'],
             [['password', 'created_at', 'last_login_at'], 'safe'],
             [['status'], 'default', 'value' => self::STATUS_PENDING],
             [['status'], 'in', 'range' => [
@@ -129,17 +133,17 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::findByLogin()
      */
-    public static function findByUsername($username)
+    public static function findByLogin($login)
     {
-        return static::find()->where([
-            'and',
-            ['username' => $username],
-            ['>=', 'status', self::STATUS_PENDING]
+        return static::find()->where(['and',
+            ['>=', 'status', self::STATUS_PENDING],
+            ['or',
+                ['username' => $login],
+                ['primary_email' => $login],
+            ],
         ])->one();
     }
 
@@ -204,7 +208,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Validates password
+     * Validates password.
      *
      * @param string $password password to validate
      * @return boolean if password provided is valid for current user
@@ -215,7 +219,9 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Generates password hash from password and sets it to the model
+     * Generates password hash from password and sets it to the model.
+     * **Note:** Every time the password is reset the "authKey" will be regenrated
+     * as the old credential info are all considered unsafe.
      *
      * @param string $password
      */
@@ -224,6 +230,7 @@ class User extends ActiveRecord implements IdentityInterface
         if (!$password) return;
         $this->_pswd = $password;
         $this->password_hash = Yii::$app->security->generatePasswordHash($this->_pswd);
+        $this->generateAuthKey();
     }
 
     /**

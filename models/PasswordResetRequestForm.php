@@ -38,11 +38,7 @@ class PasswordResetRequestForm extends Model
     {
         /* @var $user User */
         $userModelClass = $this->userModelClass;
-        $user = $userModelClass::find()->where([
-            'and',
-            ['primary_email' => $this->email],
-            ['>=', 'status', User::STATUS_PENDING]
-        ])->one();
+        $user = $userModelClass::findByLogin($this->email);
 
         if ($user) {
             if (!$userModelClass::isPasswordResetTokenValid($user->password_reset_token)) {
