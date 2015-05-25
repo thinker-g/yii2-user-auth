@@ -35,6 +35,7 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
                         'value' => $model->user->availableStatus()[$model->user->status]
                     ],
                     'created_at',
+                    'updated_at',
                     'last_login_at'
                 ]
             ]) ?>

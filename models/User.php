@@ -7,7 +7,7 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use yii\db\ActiveQuery;
 use thinker_g\UserAuth\interfaces\CredentialInterface;
-use yii\validators\EmailValidator;
+use yii\db\Expression;
 
 /**
  * User model
@@ -20,8 +20,9 @@ use yii\validators\EmailValidator;
  * @property string $auth_key
  * @property string $password_reset_token
  * @property string $password Virtual attribute, does't exist in db table.
- * @property integer $created_at
- * @property integer $updated_at
+ * @property string $created_at
+ * @property string $updated_at
+ * @property string $last_login_at
  * @property array $userExtAccounts
  */
 class User extends ActiveRecord implements IdentityInterface, CredentialInterface
@@ -88,7 +89,21 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
                 self::STATUS_ACTIVE,
                 self::STATUS_DELETED
             ]],
-            [['created_at', 'last_login_at'], 'safe'],
+            [['created_at', 'updated_at', 'last_login_at'], 'safe'],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     * @see \yii\base\Component::behaviors()
+     */
+    public function behaviors()
+    {
+        return [
+            'ts' => [
+                'class' => 'yii\behaviors\TimestampBehavior',
+                'value' => new Expression('CURRENT_TIMESTAMP'),
+            ]
         ];
     }
 
@@ -107,7 +122,25 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
             'password_reset_token' => Yii::t('app', 'Password reset Token'),
             'created_at' => Yii::t('app', 'Created At'),
             'updated_at' => Yii::t('app', 'Updated At'),
-            'userExtaccounts' => Yii::t('app', 'User Ext Accounts'),
+            'last_login_at' => Yii::t('app', 'Last Login At'),
+            'userExtAccounts' => Yii::t('app', 'User Ext Accounts'),
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     * @see \yii\base\Model::attributeHints()
+     */
+    public function attributeHints()
+    {
+        return [
+            'password' => Yii::t('app',
+                $this->isNewRecord
+                ? 'Password can be empty or at least 5 characters.'
+                : 'At least 5 characters, leave empty for no change.'
+            ),
+            'updated_at' => Yii::t('app', 'No need for setting up a value, will be automatically updated.'),
+            'last_login_at' => Yii::t('app','Need additional codes to auto-update it, a handler bound on "afterLogin" event of \\yii\\web\\User can be a good way.')
         ];
     }
 

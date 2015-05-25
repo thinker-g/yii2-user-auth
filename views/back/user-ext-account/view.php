@@ -58,6 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         'value' => $model->user->availableStatus()[$model->user->status]
                     ],
                     'created_at',
+                    'updated_at',
                     'last_login_at'
                 ]
             ]) ?>

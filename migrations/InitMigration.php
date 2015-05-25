@@ -16,6 +16,7 @@ class InitMigration extends CreationMigration
                 'auth_key' => 'VARCHAR(64) NULL',
                 'password_reset_token' => 'VARCHAR(255) NULL',
                 'created_at' => 'TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP',
+                'updated_at' => 'TIMESTAMP NULL',
                 'last_login_at' => 'TIMESTAMP NULL'
             ],
             'IDXS' => [
