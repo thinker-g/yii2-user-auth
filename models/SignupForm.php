@@ -2,7 +2,9 @@
 namespace thinker_g\UserAuth\models;
 
 use yii\base\Model;
+use yii\base\NotSupportedException;
 use Yii;
+use thinker_g\UserAuth\interfaces\CredentialInterface;
 
 /**
  * Signup form
@@ -85,7 +87,7 @@ class SignupForm extends Model
     {
         if ($this->validate()) {
             $user = Yii::createObject($this->userModelClass);
-            if (!$userModel instanceof CredentialInterface) {
+            if (!$user instanceof CredentialInterface) {
                 throw new NotSupportedException(
                     get_class($user)
                     . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\CredentialInterface.'
