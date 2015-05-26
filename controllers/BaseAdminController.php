@@ -15,7 +15,7 @@ abstract class BaseAdminController extends CrudController
      * @inheritdoc
      * @var string
      */
-    public $moduleAttr = 'backMvMap';
+    public $moduleMvMapAttr = 'backMvMap';
 
     /**
      * @inheritdoc

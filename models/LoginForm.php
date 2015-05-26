@@ -84,6 +84,7 @@ class LoginForm extends Model
     public function login()
     {
         if ($this->validate()) {
+            //todo keepLoginDuration default value not implemented.
             return Yii::$app->user->login($this->getUser(), $this->rememberMe ? $this->keepLoginDuration : 0);
         } else {
             return false;

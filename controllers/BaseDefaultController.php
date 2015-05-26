@@ -15,7 +15,7 @@ abstract class BaseDefaultController extends ModelViewController
      * @inheritdoc
      * @var string
      */
-    public $moduleAttr = 'mvMap';
+    public $moduleMvMapAttr = 'mvMap';
 
     /**
      * @inheritdoc

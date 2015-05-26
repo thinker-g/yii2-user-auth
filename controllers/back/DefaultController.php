@@ -13,7 +13,7 @@ use Yii;
  */
 class DefaultController extends BaseDefaultController
 {
-    public $moduleAttr = 'backMvMap';
+    public $moduleMvMapAttr = 'backMvMap';
     public function actionIndex()
     {
         $modelClassName = self::classNameFromConf($this->getActionMvMap()['model']);

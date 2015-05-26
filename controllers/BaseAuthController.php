@@ -17,7 +17,7 @@ abstract class BaseAuthController extends CrudController
      * @inheritdoc
      * @var string
      */
-    public $moduleAttr = 'mvMap';
+    public $moduleMvMapAttr = 'mvMap';
 
     /**
      * @inheritdoc
