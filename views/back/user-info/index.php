@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'board_type:ntext',
             'ski_age',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn', 'header'  => Yii::t('app', 'Actions')],
         ],
     ]); ?>
 

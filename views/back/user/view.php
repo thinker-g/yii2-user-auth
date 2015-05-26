@@ -130,7 +130,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'created_at',
                 'updated_at',
                 [
-                    'class' => 'yii\grid\ActionColumn',
+                    'class' => 'yii\grid\ActionColumn', 'header'  => Yii::t('app', 'Actions'),
                     'urlCreator' => function($action, $model, $key, $index) {
                         return Url::toRoute([
                             '/' . $this->context->module->uniqueId . '/user-ext-account/' . $action,
