@@ -1,16 +1,21 @@
 <?php
 namespace thinker_g\UserAuth\controllers;
 
-use yii\web\Controller;
 use yii\filters\AccessControl;
+use thinker_g\Helpers\controllers\ModelViewController;
 
 /**
  * Module splash page controller for backend/frontend of the site.
  * @author Thinker_g
  *
  */
-abstract class BaseDefaultController extends Controller
+abstract class BaseDefaultController extends ModelViewController
 {
+    /**
+     * @inheritdoc
+     * @var string
+     */
+    public $moduleAttr = 'mvMap';
 
     /**
      * @inheritdoc

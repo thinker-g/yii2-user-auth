@@ -310,6 +310,27 @@ class User extends ActiveRecord implements IdentityInterface, CredentialInterfac
         ];
     }
 
+    /**
+     * Get statistic data by user's status.
+     * @return array An 2D array, in which each "line" is an array indexed by status code.
+     * A value indexed by 'all' will be add as the first "line" for total number of users.
+     */
+    public static function getStatsByStatus()
+    {
+        $stats = \thinker_g\UserAuth\models\User::find()
+            ->asArray()
+            ->select(['status', 'count(*) AS count'])
+            ->groupBy('status')
+            ->indexBy('status')
+            ->all();
+        $sum = 0;
+        foreach ($stats as $entry) {
+            $sum += $entry['count'];
+        }
+        array_push($stats, ['status' => 'all', 'count' => $sum]);
+        return $stats;
+    }
+
     /*
      * -- Relations begin --
      */

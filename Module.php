@@ -100,6 +100,9 @@ class Module extends \yii\base\Module
      * @var unknown
      */
     public $backMvMap = [
+        'default' => [
+            ['model' => 'thinker_g\UserAuth\models\User'],
+        ],
         'auth' => [
             'request-password-reset' => ['view' => 'requestPasswordResetToken'],
             'reset-password' => ['view' => 'resetPassword'],
