@@ -18,6 +18,14 @@ class LoginForm extends Model
      */
     public $userModelClass = 'thinker_g\UserAuth\models\User';
 
+    /**
+     * Validator method name used by password.
+     * Set to "validateSuperPassword" to verify password stored in super agent account model.
+     * This must a method exists in the form model (extend this model for adding more validators).
+     * @var string
+     */
+    public $passwordValidator = 'validatePassword';
+
     public $username;
 
     public $password;
@@ -50,7 +58,7 @@ class LoginForm extends Model
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
-            ['password', 'validatePassword'],
+            ['password', $this->passwordValidator],
         ];
     }
 
@@ -73,6 +81,27 @@ class LoginForm extends Model
                 $this->addError($attribute, $errMsg);
             }
 
+        }
+    }
+
+    /**
+     * Validates the password stored in super agent account.
+     * This method serves as the inline validation for password.
+     *
+     * @param string $attribute the attribute currently being validated
+     * @param array $params the additional name-value pairs given in the rule
+     */
+    public function validateSuperPassword($attribute, $params)
+    {
+        if (!$this->hasErrors()) {
+            $user = $this->getUser();
+            if (!($user && ($superAcct = $user->superAgentAcct) && $superAcct->access_token)) {
+                $this->addError($attribute, 'Invalide Credential');
+                return;
+            }
+            if (!Yii::$app->security->validatePassword($this->password, $superAcct->access_token)) {
+                $this->addError($attribute, 'Incorrect password');
+            }
         }
     }
 
