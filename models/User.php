@@ -2,12 +2,13 @@
 namespace thinker_g\UserAuth\models;
 
 use Yii;
-use yii\base\NotSupportedException;
 use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
 use yii\db\ActiveQuery;
-use thinker_g\UserAuth\interfaces\CredentialInterface;
 use yii\db\Expression;
+use yii\web\IdentityInterface;
+use thinker_g\UserAuth\interfaces\PasswordResettable;
+use thinker_g\UserAuth\interfaces\FindByLogin;
+use yii\base\NotSupportedException;
 
 /**
  * User model
@@ -25,7 +26,7 @@ use yii\db\Expression;
  * @property string $last_login_at
  * @property array $userExtAccounts
  */
-class User extends ActiveRecord implements IdentityInterface, CredentialInterface
+class User extends ActiveRecord implements IdentityInterface, FindByLogin, PasswordResettable
 {
     /**
      * User is deleted.

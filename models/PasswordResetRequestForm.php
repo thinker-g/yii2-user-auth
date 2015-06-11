@@ -2,6 +2,7 @@
 namespace thinker_g\UserAuth\models;
 
 use yii\base\Model;
+use thinker_g\UserAuth\interfaces\PasswordResettable;
 
 /**
  * Password reset request form
@@ -41,16 +42,23 @@ class PasswordResetRequestForm extends Model
         $user = $userModelClass::findByLogin($this->email);
 
         if ($user) {
-            if (!$userModelClass::isPasswordResetTokenValid($user->password_reset_token)) {
-                $user->generatePasswordResetToken();
-            }
+            if (!$user instanceof PasswordResettable) {
+                throw new NotSupportedException(
+                    get_class($user)
+                    . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\PasswordResettable .'
+                );
+            } else {
+                if (!$userModelClass::isPasswordResetTokenValid($user->password_reset_token)) {
+                    $user->generatePasswordResetToken();
+                }
 
-            if ($user->save()) {
-                return \Yii::$app->mailer->compose(['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'], ['user' => $user])
-                    ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
-                    ->setTo($this->email)
-                    ->setSubject('Password reset for ' . \Yii::$app->name)
-                    ->send();
+                if ($user->save()) {
+                    return \Yii::$app->mailer->compose(['html' => 'passwordResetToken-html', 'text' => 'passwordResetToken-text'], ['user' => $user])
+                        ->setFrom([\Yii::$app->params['supportEmail'] => \Yii::$app->name . ' robot'])
+                        ->setTo($this->email)
+                        ->setSubject('Password reset for ' . \Yii::$app->name)
+                        ->send();
+                }
             }
         }
 

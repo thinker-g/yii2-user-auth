@@ -3,8 +3,10 @@ namespace thinker_g\UserAuth\models;
 
 use Yii;
 use yii\base\Model;
-use thinker_g\UserAuth\interfaces\CredentialInterface;
 use yii\base\NotSupportedException;
+use thinker_g\UserAuth\interfaces\CredentialIdentity;
+use thinker_g\UserAuth\interfaces\FindByLogin;
+use yii\web\IdentityInterface;
 
 /**
  * Login form
@@ -73,14 +75,15 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!($user && $user->validatePassword($this->password))) {
-                $errMsg = 'Incorrect username or password.';
-                if ($user && !$user->password) {
-                    $errMsg = 'Account is not available for login.';
-                }
-                $this->addError($attribute, $errMsg);
+            if (!$user instanceof IdentityInterface) {
+                throw new NotSupportedException(
+                    get_class($user)
+                    . ' must implement interface \\yii\\web\\IdentityInterface.'
+                );
             }
-
+            if (!($user && $user->validatePassword($this->password))) {
+                $this->addError($attribute, 'Incorrect username or password.');
+            }
         }
     }
 
@@ -129,10 +132,10 @@ class LoginForm extends Model
     {
         if ($this->_user === false) {
             $userModel = Yii::createObject($this->userModelClass);
-            if (!$userModel instanceof CredentialInterface) {
+            if (!$userModel instanceof FindByLogin) {
                 throw new NotSupportedException(
                     get_class($userModel)
-                    . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\CredentialInterface.'
+                    . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\FindByLogin.'
                 );
             }
             $this->_user = $userModel::findByLogin($this->username);

@@ -2,8 +2,10 @@
 namespace thinker_g\UserAuth\models;
 
 use yii\base\InvalidParamException;
+use yii\base\NotSupportedException;
 use yii\base\Model;
 use Yii;
+use thinker_g\UserAuth\interfaces\PasswordResettable;
 
 /**
  * Password reset form
@@ -32,8 +34,14 @@ class ResetPasswordForm extends Model
         }
         $userModelClass = $this->userModelClass;
         $this->_user = $userModelClass::findByPasswordResetToken($this->token);
+
         if (!$this->_user) {
             throw new InvalidParamException('Invalid password reset token.');
+        } elseif (!$this->_user instanceof PasswordResettable) {
+            throw new NotSupportedException(
+                get_class($this->_user)
+                . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\PasswordResettable .'
+            );
         }
     }
 
