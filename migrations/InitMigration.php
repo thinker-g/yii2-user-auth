@@ -3,6 +3,12 @@ namespace thinker_g\UserAuth\migrations;
 
 use thinker_g\Helpers\migrations\CreationMigration;
 
+/**
+ * Migration for integrating module into existing system.
+ *
+ * @author Thinker_g
+ * @todo Segregate this into 3 migrations, so developers can choose which to use more flexibly.
+ */
 class InitMigration extends CreationMigration
 {
     public $tables = [

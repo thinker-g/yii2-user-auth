@@ -11,7 +11,10 @@ use thinker_g\UserAuth\interfaces\FindByLogin;
 use yii\base\NotSupportedException;
 
 /**
- * User model
+ * User model.
+ *
+ * This model normally only stores the program logic relevant attributes,
+ * such as credentials, tokens for security control, and timestamps for different system usage.
  *
  * @property integer $id
  * @property string $username
