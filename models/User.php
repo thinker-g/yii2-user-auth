@@ -335,38 +335,4 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
         return $stats;
     }
 
-    /*
-     * -- Relations begin --
-     */
-
-    /**
-     * Get super agent account of current user.
-     * @return ActiveQuery
-     */
-    public function getSuperAgentAcct()
-    {
-        return $this->hasOne(UserExtAccount::className(), ['user_id' => 'id'])
-            ->where(['from_source' => UserExtAccount::SRC_SUPER_AGENT]);
-    }
-
-    /**
-     * Get ext accounts of current user.
-     * @return ActiveQuery
-     */
-    public function getUserExtAccounts()
-    {
-        return $this->hasMany(UserExtAccount::className(), ['user_id' => 'id']);
-    }
-
-    /**
-     * Get additional information for current user.
-     * @return ActiveQuery
-     */
-    public function getUserInfo()
-    {
-        return $this->hasOne(UserInfo::className(), ['user_id' => 'id']);
-    }
-    /*
-     * -- Relations end --
-     */
 }

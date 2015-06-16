@@ -51,6 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </div><!-- $.pandel.panel-default -->
 
+    <?php if ($model->hasProperty('userInfo')): // Display user info if defined. ?>
     <div class="panel panel-default">
         <div class="panel-heading">
             <strong>Additional Info: </strong>
@@ -93,7 +94,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ])); ?>
     </div><!-- $.pandel.panel-default -->
+    <?php endif; // <End> Display user info if defined. ?>
 
+    <?php if ($model->hasProperty('userExtAccounts')): // Display External User Account if defined ?>
     <div class="panel panel-default">
         <div class="panel-heading">
             <strong>External Account: </strong>
@@ -141,5 +144,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ]
         ]) ?>
     </div><!-- $.pandel.panel-default -->
+    <?php endif; // <End> Display External User Account if defined ?>
 
 </div>
