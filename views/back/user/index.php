@@ -5,7 +5,7 @@ use yii\grid\GridView;
 use yii\data\Pagination;
 
 /* @var $this yii\web\View */
-/* @var $searchModel thinker_g\UserAuth\models\UserSearch */
+/* @var $searchModel thinker_g\UserAuth\models\ars\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Users');

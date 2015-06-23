@@ -11,15 +11,8 @@ use yii\web\IdentityInterface;
 /**
  * Login form
  */
-class LoginForm extends Model
+class LoginForm extends CredentialForm
 {
-    /**
-     * User model class name.
-     * The class must implement interface \thinker_g\UserAuth\interfaces\CredentialInterface .
-     * @todo Move this default value to null, read value from Yii::$app->user component.
-     * @var string
-     */
-    public $userModelClass = 'thinker_g\UserAuth\models\ars\User';
 
     /**
      * Validator method name used by password.
@@ -76,13 +69,14 @@ class LoginForm extends Model
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
-            if (!$user instanceof IdentityInterface) {
+            if (!$user) {
+                $this->addError($attribute, 'Invalid username or password.');
+            } elseif (!$user instanceof IdentityInterface) {
                 throw new NotSupportedException(
                     get_class($user)
                     . ' must implement interface \\yii\\web\\IdentityInterface.'
                 );
-            }
-            if (!($user && $user->validatePassword($this->password))) {
+            } elseif (!$user->validatePassword($this->password)) {
                 $this->addError($attribute, 'Incorrect username or password.');
             }
         }
@@ -132,7 +126,7 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $userModel = Yii::createObject($this->userModelClass);
+            $userModel = Yii::createObject($this->getCredentialModelClass());
             if (!$userModel instanceof FindByLogin) {
                 throw new NotSupportedException(
                     get_class($userModel)

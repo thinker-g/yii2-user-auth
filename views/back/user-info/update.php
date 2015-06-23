@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model thinker_g\UserAuth\models\UserInfo */
+/* @var $model thinker_g\UserAuth\models\ars\UserInfo */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'User Info',

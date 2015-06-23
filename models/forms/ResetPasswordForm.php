@@ -10,9 +10,8 @@ use thinker_g\UserAuth\interfaces\PasswordResettable;
 /**
  * Password reset form
  */
-class ResetPasswordForm extends Model
+class ResetPasswordForm extends CredentialForm
 {
-    public $userModelClass = 'thinker_g\UserAuth\models\ars\User';
     public $password;
     public $token;
 
@@ -32,7 +31,7 @@ class ResetPasswordForm extends Model
         if (empty($this->token) || !is_string($this->token)) {
             throw new InvalidParamException('Password reset token cannot be blank.');
         }
-        $userModelClass = $this->userModelClass;
+        $userModelClass = $this->getCredentialModelClass();
         $this->_user = $userModelClass::findByPasswordResetToken($this->token);
 
         if (!$this->_user) {

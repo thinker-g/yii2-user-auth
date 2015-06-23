@@ -3,13 +3,13 @@ namespace thinker_g\UserAuth\models\forms;
 
 use yii\base\Model;
 use thinker_g\UserAuth\interfaces\PasswordResettable;
+use thinker_g\UserAuth\models\ars\User;
 
 /**
  * Password reset request form
  */
-class PasswordResetRequestForm extends Model
+class PasswordResetRequestForm extends CredentialForm
 {
-    public $userModelClass = 'thinker_g\UserAuth\models\ars\User';
     public $email;
 
     /**
@@ -22,7 +22,7 @@ class PasswordResetRequestForm extends Model
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'exist',
-                'targetClass' => $this->userModelClass,
+                'targetClass' => $this->getCredentialModelClass(),
                 'targetAttribute' => 'primary_email',
                 'filter' => ['>=', 'status', User::STATUS_PENDING],
                 'message' => 'There is no user with such email.'
@@ -38,7 +38,7 @@ class PasswordResetRequestForm extends Model
     public function sendEmail()
     {
         /* @var $user User */
-        $userModelClass = $this->userModelClass;
+        $userModelClass = $this->getCredentialModelClass();
         $user = $userModelClass::findByLogin($this->email);
 
         if ($user) {

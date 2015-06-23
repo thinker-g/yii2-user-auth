@@ -9,14 +9,8 @@ use thinker_g\UserAuth\interfaces\PasswordSettable;
 /**
  * Signup form
  */
-class SignupForm extends Model
+class SignupForm extends CredentialForm
 {
-    /**
-     * User model configuration.
-     * @var string|array
-     */
-    public $userModelClass = 'thinker_g\UserAuth\models\ars\User';
-
     /**
      * Attribute map between this class and the configured user model class,
      * where keys are the form model attributes and corresponding values belong to the specified user model.
@@ -65,10 +59,10 @@ class SignupForm extends Model
                 'message' => '{attribute} "{value}" is reserved for system usage, please choose another one.'
             ],
             ['username', 'unique',
-                'targetClass' => $this->userModelClass,
+                'targetClass' => $this->getCredentialModelClass(),
             ],
             ['email', 'unique',
-                'targetClass' => $this->userModelClass,
+                'targetClass' => $this->getCredentialModelClass(),
                 'targetAttribute' => 'primary_email',
                 'message' => 'This email address has already been taken.'
             ],
@@ -86,7 +80,7 @@ class SignupForm extends Model
     public function signup()
     {
         if ($this->validate()) {
-            $user = Yii::createObject($this->userModelClass);
+            $user = Yii::createObject($this->getCredentialModelClass());
             if (!$user instanceof PasswordSettable) {
                 throw new NotSupportedException(
                     get_class($user)

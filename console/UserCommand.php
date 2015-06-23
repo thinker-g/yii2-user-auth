@@ -4,7 +4,7 @@ namespace thinker_g\UserAuth\console;
 use Yii;
 use yii\console\Controller;
 use yii\helpers\Console;
-use thinker_g\UserAuth\models\User;
+use thinker_g\UserAuth\models\ars\User;
 
 /**
  * User add command.
@@ -17,7 +17,7 @@ class UserCommand extends Controller
      * User model configuration.
      * @var string|array
      */
-    public $userModel = 'thinker_g\UserAuth\models\User';
+    public $userModel = 'thinker_g\UserAuth\models\ars\User';
     /**
      * Super agent account model configuration.
      * @var unknown
@@ -67,7 +67,7 @@ class UserCommand extends Controller
     public function actionAdd($username, $password)
     {
         $user = Yii::createObject($this->userModel);
-        // $user = new \thinker_g\UserAuth\models\User();
+        // $user = new \thinker_g\UserAuth\models\ars\User();
         $user->username = $username;
         $user->password = $password;
 

@@ -6,7 +6,7 @@ use yii\base\Object;
 use yii\data\ArrayDataProvider;
 
 /* @var $this yii\web\View */
-/* @var $model thinker_g\UserAuth\models\User An empty model for invoking static methods. */
+/* @var $model thinker_g\UserAuth\models\ars\User An empty model for invoking static methods. */
 /* @var $stat array An 2D array, in which each "line" is an array indexed by status code. */
 
 $this->title = Yii::t('app', $this->context->module->name);

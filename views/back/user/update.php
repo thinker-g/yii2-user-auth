@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model thinker_g\UserAuth\models\User */
+/* @var $model thinker_g\UserAuth\models\ars\User */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
     'modelClass' => 'User',

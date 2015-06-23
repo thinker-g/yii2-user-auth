@@ -7,7 +7,7 @@ use yii\data\ArrayDataProvider;
 use yii\helpers\Url;
 
 /* @var $this yii\web\View */
-/* @var $model thinker_g\UserAuth\models\User */
+/* @var $model thinker_g\UserAuth\models\ars\User */
 
 $this->title = "User [{$model->id}]: $model->primary_email";
 $this->params['breadcrumbs'][] = [

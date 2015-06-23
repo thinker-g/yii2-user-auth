@@ -5,7 +5,7 @@ use yii\widgets\DetailView;
 
 
 /* @var $this yii\web\View */
-/* @var $model thinker_g\UserAuth\models\UserInfo */
+/* @var $model thinker_g\UserAuth\models\ars\UserInfo */
 if ($model->isNewRecord && !$model->hasErrors()) {
     $model->load(Yii::$app->request->get());
 }

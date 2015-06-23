@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel thinker_g\UserAuth\models\UserInfoSearch */
+/* @var $searchModel thinker_g\UserAuth\models\ars\UserInfoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'User Infos');

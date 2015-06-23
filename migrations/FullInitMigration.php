@@ -8,7 +8,7 @@ use Yii;
  * Migration for running all migrations for FULL feature support of the module.
  * If only simple authentication is needed, only UserMigration is enough.
  * If need extra user account information, ExtAccountMigration is needed after UserMigration.
- * For extra user info (age or names, etc.), InfoMigration is needed after UserMigration. 
+ * For extra user info (age or names, etc.), InfoMigration is needed after UserMigration.
  *
  * @author Thinker_g
  */

@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model thinker_g\UserAuth\models\UserExtAccount */
+/* @var $model thinker_g\UserAuth\models\ars\UserExtAccount */
 if ($model->isNewRecord && !$model->hasErrors()) {
     $model->load(Yii::$app->request->get());
 }
