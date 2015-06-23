@@ -1,6 +1,6 @@
 <?php
 
-namespace thinker_g\UserAuth\models;
+namespace thinker_g\UserAuth\models\ars;
 
 use Yii;
 

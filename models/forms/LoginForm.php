@@ -1,5 +1,5 @@
 <?php
-namespace thinker_g\UserAuth\models;
+namespace thinker_g\UserAuth\models\forms;
 
 use Yii;
 use yii\base\Model;
@@ -16,9 +16,10 @@ class LoginForm extends Model
     /**
      * User model class name.
      * The class must implement interface \thinker_g\UserAuth\interfaces\CredentialInterface .
+     * @todo Move this default value to null, read value from Yii::$app->user component.
      * @var string
      */
-    public $userModelClass = 'thinker_g\UserAuth\models\User';
+    public $userModelClass = 'thinker_g\UserAuth\models\ars\User';
 
     /**
      * Validator method name used by password.

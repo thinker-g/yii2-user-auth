@@ -1,5 +1,5 @@
 <?php
-namespace thinker_g\UserAuth\models\traits;
+namespace thinker_g\UserAuth\models\ars\traits;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;

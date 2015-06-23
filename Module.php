@@ -55,28 +55,28 @@ class Module extends \yii\base\Module
      * Set it to "thinker_g\UserAuth\models\SuperLoginForm" for authenticating user using SuperAgentAccount in backend.
      * @var string|array
      */
-    public $modelLoginForm = 'thinker_g\UserAuth\models\LoginForm';
+    public $modelLoginForm = 'thinker_g\UserAuth\models\forms\LoginForm';
 
     /**
      * Signup form model configuration.
      * Used in frontend.
      * @var string|array
      */
-    public $modelSignupForm = 'thinker_g\UserAuth\models\SignupForm';
+    public $modelSignupForm = 'thinker_g\UserAuth\models\forms\SignupForm';
 
     /**
      * Password reset request form configuration.
      * The user's email is required by this model. System will send a password reset email to the user.
      * @var string|array
      */
-    public $modelPasswordResetRequestForm = 'thinker_g\UserAuth\models\PasswordResetRequestForm';
+    public $modelPasswordResetRequestForm = 'thinker_g\UserAuth\models\forms\PasswordResetRequestForm';
 
     /**
      * Reset password form configuration.
      * User needs to input a new password into this form.
      * @var string|array
      */
-    public $modelResetPasswordForm = 'thinker_g\UserAuth\models\ResetPasswordForm';
+    public $modelResetPasswordForm = 'thinker_g\UserAuth\models\forms\ResetPasswordForm';
 
     /**
      * Roles allowed to access the module.
@@ -101,7 +101,7 @@ class Module extends \yii\base\Module
      */
     public $backMvMap = [
         'default' => [
-            ['model' => 'thinker_g\UserAuth\models\User'],
+            ['model' => 'thinker_g\UserAuth\models\ars\User'],
         ],
         'auth' => [
             'request-password-reset' => ['view' => 'requestPasswordResetToken'],
@@ -109,26 +109,26 @@ class Module extends \yii\base\Module
         ],
         'user' => [
             [
-                'model' => 'thinker_g\UserAuth\models\User',
-                'search' => 'thinker_g\UserAuth\models\UserSearch'
+                'model' => 'thinker_g\UserAuth\models\ars\User',
+                'search' => 'thinker_g\UserAuth\models\ars\UserSearch'
             ],
         ],
         'user-ext-account' => [
             [
-                'model' => 'thinker_g\UserAuth\models\UserExtAccount',
-                'search' => 'thinker_g\UserAuth\models\UserExtAccountSearch',
+                'model' => 'thinker_g\UserAuth\models\ars\UserExtAccount',
+                'search' => 'thinker_g\UserAuth\models\ars\UserExtAccountSearch',
             ]
         ],
         'user-info' => [
             [
-                'model' => 'thinker_g\UserAuth\models\UserInfo',
-                'search' => 'thinker_g\UserAuth\models\UserInfoSearch',
+                'model' => 'thinker_g\UserAuth\models\ars\UserInfo',
+                'search' => 'thinker_g\UserAuth\models\ars\UserInfoSearch',
             ]
         ],
         'super-agent' => [
             [
-                'model' => 'thinker_g\UserAuth\models\SuperAgentAccount',
-                'search' => 'thinker_g\UserAuth\models\SuperAgentAccountSearch',
+                'model' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
+                'search' => 'thinker_g\UserAuth\models\ars\SuperAgentAccountSearch',
             ]
         ],
     ];

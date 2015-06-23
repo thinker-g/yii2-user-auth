@@ -1,5 +1,5 @@
 <?php
-namespace thinker_g\UserAuth\models;
+namespace thinker_g\UserAuth\models\forms;
 
 use yii\base\Model;
 use thinker_g\UserAuth\interfaces\PasswordResettable;
@@ -9,7 +9,7 @@ use thinker_g\UserAuth\interfaces\PasswordResettable;
  */
 class PasswordResetRequestForm extends Model
 {
-    public $userModelClass = 'thinker_g\UserAuth\models\User';
+    public $userModelClass = 'thinker_g\UserAuth\models\ars\User';
     public $email;
 
     /**

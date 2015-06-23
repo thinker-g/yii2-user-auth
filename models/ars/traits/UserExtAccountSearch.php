@@ -1,17 +1,18 @@
 <?php
-namespace thinker_g\UserAuth\models\traits;
+namespace thinker_g\UserAuth\models\ars\traits;
 
+use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use thinker_g\UserAuth\models\User;
 
 /**
  *
  * @author Thinker_g
  *
  */
-trait SuperAgentAccountSearch
+trait UserExtAccountSearch
 {
-    use UserExtAccountSearch;
+    public $username;
+    public $primary_email;
 
     /**
      * @inheritdoc
@@ -23,12 +24,22 @@ trait SuperAgentAccountSearch
             [[
                 'username',
                 'primary_email',
+                'from_source',
                 'access_token',
                 'email',
                 'created_at',
                 'updated_at'
             ], 'safe'],
         ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function scenarios()
+    {
+        // bypass scenarios() implementation in the parent class
+        return Model::scenarios();
     }
 
     /**
@@ -54,13 +65,13 @@ trait SuperAgentAccountSearch
 
         $dataProvider->sort->attributes['username'] = [
             'label' => 'Username',
-            'asc' => [User::tableName() . '.username' => SORT_ASC],
-            'desc' =>[User::tableName() . '.username' => SORT_DESC]
+            'asc' => [parent::tableName() . '.username' => SORT_ASC],
+            'desc' =>[parent::tableName() . '.username' => SORT_DESC]
         ];
         $dataProvider->sort->attributes['primary_email'] = [
             'label' => 'Primary email',
-            'asc' => [User::tableName() . '.primary_email' => SORT_ASC],
-            'desc' =>[User::tableName() . '.primary_email' => SORT_DESC]
+            'asc' => [parent::tableName() . '.primary_email' => SORT_ASC],
+            'desc' =>[parent::tableName() . '.primary_email' => SORT_DESC]
         ];
 
         $this->load($params);
@@ -75,15 +86,15 @@ trait SuperAgentAccountSearch
             self::tableName() . '.id' => $this->id,
             'user_id' => $this->user_id,
             'ext_user_id' => $this->ext_user_id,
-            'from_source' => static::SRC_SUPER_AGENT
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['like', User::tableName() . '.username', $this->username])
-            ->andFilterWhere(['like', User::tableName() . '.primary_email', $this->primary_email])
+        $query->andFilterWhere(['like', parent::tableName() . '.username', $this->username])
+            ->andFilterWhere(['like', parent::tableName() . '.primary_email', $this->primary_email])
+            ->andFilterWhere(['like', 'from_source', $this->from_source])
             ->andFilterWhere(['like', 'access_token', $this->access_token])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', self::tableName() . '.created_at', $this->created_at])
-            ->andFilterWhere(['like', self::tableName() . '.updated_at', $this->updated_at]);
+            ->andFilterWhere(['like', 'email', $this->email]);
 
         return $dataProvider;
     }

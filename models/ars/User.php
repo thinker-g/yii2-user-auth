@@ -1,5 +1,5 @@
 <?php
-namespace thinker_g\UserAuth\models;
+namespace thinker_g\UserAuth\models\ars;
 
 use Yii;
 use yii\db\ActiveRecord;
@@ -321,7 +321,7 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
      */
     public static function getStatsByStatus()
     {
-        $stats = \thinker_g\UserAuth\models\User::find()
+        $stats = self::find()
             ->asArray()
             ->select(['status', 'count(*) AS count'])
             ->groupBy('status')

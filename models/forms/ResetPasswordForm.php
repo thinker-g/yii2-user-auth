@@ -1,5 +1,5 @@
 <?php
-namespace thinker_g\UserAuth\models;
+namespace thinker_g\UserAuth\models\forms;
 
 use yii\base\InvalidParamException;
 use yii\base\NotSupportedException;
@@ -12,7 +12,7 @@ use thinker_g\UserAuth\interfaces\PasswordResettable;
  */
 class ResetPasswordForm extends Model
 {
-    public $userModelClass = 'thinker_g\UserAuth\models\User';
+    public $userModelClass = 'thinker_g\UserAuth\models\ars\User';
     public $password;
     public $token;
 

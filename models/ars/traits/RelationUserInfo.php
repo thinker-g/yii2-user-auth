@@ -1,13 +1,13 @@
 <?php
-namespace thinker_g\UserAuth\models\traits;
+namespace thinker_g\UserAuth\models\ars\traits;
 
-use thinker_g\UserAuth\models\UserInfo;
+use thinker_g\UserAuth\models\ars\UserInfo;
 
 /**
  * Use this trait when "User" model needs relations of extra user information.
  * The corresponding database table must be created first.
  * @author Thinker_g
- * 
+ *
  */
 trait RelationUserInfo
 {

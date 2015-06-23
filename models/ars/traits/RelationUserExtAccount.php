@@ -1,14 +1,14 @@
 <?php
-namespace thinker_g\UserAuth\models\traits;
+namespace thinker_g\UserAuth\models\ars\traits;
 
-use thinker_g\UserAuth\models\UserExtAccount;
+use thinker_g\UserAuth\models\ars\UserExtAccount;
 
 /**
  *
  * Use this trait when "User" model needs relations of External Accounts and Super Agent Account.
- * The corresponding database table must be created first. 
+ * The corresponding database table must be created first.
  * @author Thinker_g
- * 
+ *
  */
 trait RelationUserExtAccount
 {

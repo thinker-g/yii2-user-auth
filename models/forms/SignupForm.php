@@ -1,5 +1,5 @@
 <?php
-namespace thinker_g\UserAuth\models;
+namespace thinker_g\UserAuth\models\forms;
 
 use yii\base\Model;
 use yii\base\NotSupportedException;
@@ -15,7 +15,7 @@ class SignupForm extends Model
      * User model configuration.
      * @var string|array
      */
-    public $userModelClass = 'thinker_g\UserAuth\models\User';
+    public $userModelClass = 'thinker_g\UserAuth\models\ars\User';
 
     /**
      * Attribute map between this class and the configured user model class,

@@ -1,9 +1,9 @@
 <?php
-namespace thinker_g\UserAuth\models;
+namespace thinker_g\UserAuth\models\ars;
 
 use Yii;
-use thinker_g\UserAuth\models\UserExtAccount;
-use thinker_g\UserAuth\models\traits\UserExtAccountSearch as SearchTrait;
+use thinker_g\UserAuth\models\ars\UserExtAccount;
+use thinker_g\UserAuth\models\ars\traits\UserExtAccountSearch as SearchTrait;
 
 /**
  * UserExtAccountSearch represents the model behind the search form about `thinker_g\UserAuth\models\UserExtAccount`.
