@@ -32,23 +32,23 @@ use yii\base\NotSupportedException;
 class User extends ActiveRecord implements IdentityInterface, FindByLogin, PasswordResettable
 {
     /**
-     * User is deleted.
+     * User is deprecated.
      * For further usage, status code 0-9 is preserved for unavailable status.
      * @var int
      */
-    const STATUS_DELETED = 0;
+    const STATUS_DEPRECATED = 0;
 
     /**
      * User is registered, but still not finish the onboarding procedure yet.
      * The onboarding procedure might be something like email confirmation, initial email stream, etc.
-     * For further usage, status code 10-19 is preserved for unavailable status.
+     * For further usage, status code 10-19 is preserved for semi-active status.
      * @var int
      */
     const STATUS_PENDING = 10;
 
     /**
      * User is active, means normal users who completed all their onboarding procedure.
-     * For further usage, status code 20-29 is preserved for unavailable status.
+     * For further usage, status code 20-29 is preserved for full active status.
      * @var int
      */
     const STATUS_ACTIVE = 20;
@@ -91,7 +91,7 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
             [['status'], 'in', 'range' => [
                 self::STATUS_PENDING,
                 self::STATUS_ACTIVE,
-                self::STATUS_DELETED
+                self::STATUS_DEPRECATED
             ]],
             [['created_at', 'updated_at', 'last_login_at'], 'safe'],
         ];
@@ -310,7 +310,7 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
         return [
             static::STATUS_PENDING => 'Pending',
             static::STATUS_ACTIVE => 'Active',
-            static::STATUS_DELETED => 'Deleted',
+            static::STATUS_DEPRECATED => 'Deprecated',
         ];
     }
 
