@@ -34,7 +34,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'username',
             'primary_email:email',
             // 'password_hash',
-            'status',
+            [
+                'attribute' => 'status',
+                'value' => function($model, $key, $index, $column) {
+                    return isset($model->availableStatus()[$model->status])
+                        ? $model::availableStatus()[$model->status] . ' [' . $model->status . ']'
+                        : $model->status;
+                }
+            ],
             // 'auth_key',
             // 'password_reset_token',
             'created_at',
