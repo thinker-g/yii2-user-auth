@@ -18,7 +18,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'status')->dropDownList($model->availableStatus()) ?>
+    <?php
+        $statusField = $form->field($model, 'status');
+        is_null($model->status) && ($model->status = $model::$defaultStatusCode);
+        ($model->id == Yii::$app->getUser()->id) && $statusField->hintOptions['class'] = ' text-danger';
+    ?>
+    <?= $statusField->dropDownList($model->availableStatus()) ?>
 
     <?= $form->field($model, 'created_at')->textInput() ?>
 

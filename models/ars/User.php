@@ -33,25 +33,26 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
 {
     /**
      * User is deprecated.
-     * For further usage, status code 0-9 is preserved for unavailable status.
+     * A user who is "DEPRECATED" is treated as "non-existing" accounts. While adding new users, whether
+     * a deprecated username is available, depends on the validators applied on `username` of this model.
+     * For further usage, status code 0-127 (0x00-0x7f) is preserved for unavailable status.
      * @var int
      */
-    const STATUS_DEPRECATED = 0;
+    const STATUS_DEPRECATED = 0x00;
 
     /**
-     * User is registered, but still not finish the onboarding procedure yet.
-     * The onboarding procedure might be something like email confirmation, initial email stream, etc.
-     * For further usage, status code 10-19 is preserved for semi-active status.
+     * User is alive.
+     * A user who is "ALIVE" is able to login to the system.
+     * For further usage, status code 128-255 (0x80-0xff) is preserved for status which are allowed to login.
      * @var int
      */
-    const STATUS_PENDING = 10;
+    const STATUS_ALIVE = 0x80;
 
     /**
-     * User is active, means normal users who completed all their onboarding procedure.
-     * For further usage, status code 20-29 is preserved for full active status.
+     * Default status code for new registered users.
      * @var int
      */
-    const STATUS_ACTIVE = 20;
+    public static $defaultStatusCode = self::STATUS_ALIVE;
 
     /**
      * Number of seconds before the password reset token is expired.
@@ -87,13 +88,9 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
             [['username', 'password', 'primary_email'], 'string', 'min' => 5, 'max' => 255],
             [['password_hash', 'password_reset_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 64],
-            [['status'], 'default', 'value' => self::STATUS_PENDING],
-            [['status'], 'in', 'range' => [
-                self::STATUS_PENDING,
-                self::STATUS_ACTIVE,
-                self::STATUS_DEPRECATED
-            ]],
             [['created_at', 'updated_at', 'last_login_at'], 'safe'],
+            [['status'], 'default', 'value' => static::$defaultStatusCode],
+            [['status'], 'in', 'range' => array_keys(static::availableStatus())],
         ];
     }
 
@@ -137,15 +134,23 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
      */
     public function attributeHints()
     {
-        return [
+        $hints = [
             'password' => Yii::t('app',
                 $this->isNewRecord
                 ? 'Password can be empty or at least 5 characters.'
                 : 'At least 5 characters, leave empty for no change.'
             ),
             'updated_at' => Yii::t('app', 'No need for setting up a value, will be automatically updated.'),
-            'last_login_at' => Yii::t('app','Need additional codes to auto-update it, a handler bound on "afterLogin" event of \\yii\\web\\User can be a good way.')
+            'last_login_at' => Yii::t('app','Need additional codes to auto-update it, a handler bound on "afterLogin" event of \\yii\\web\\User can be a good way.'),
         ];
+        if ($this->id == Yii::$app->getUser()->id) {
+            $hints['status'] = Yii::t('app',
+                'ATTENTION: You are changing your own user account. <br/>'
+                . 'In default behaviors, setting this to a "deprecated" (non-authenticatable) status, you\'ll be logged out immediately, '
+                . 'and won\'t be able to login anymore.'
+            );
+        }
+        return $hints;
     }
 
     /**
@@ -157,7 +162,7 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
         return static::find()->where([
             'and',
             ['id' => $id],
-            ['>=', 'status', self::STATUS_PENDING]
+            self::STATUS_ALIVE . '=status&' . self::STATUS_ALIVE
         ])->one();
     }
 
@@ -177,7 +182,7 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
     public static function findByLogin($login)
     {
         return static::find()->where(['and',
-            ['>=', 'status', self::STATUS_PENDING],
+            self::STATUS_ALIVE . '=status&' . self::STATUS_ALIVE,
             ['or',
                 ['username' => $login],
                 ['primary_email' => $login],
@@ -199,7 +204,7 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
         return static::find()->where([
             'and',
             ['password_reset_token' => $token],
-            ['>=', 'status', self::STATUS_PENDING]
+            self::STATUS_ALIVE . '=status&' . self::STATUS_ALIVE
         ])->one();
     }
 
@@ -308,8 +313,7 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
     public static function availableStatus()
     {
         return [
-            static::STATUS_PENDING => 'Pending',
-            static::STATUS_ACTIVE => 'Active',
+            static::STATUS_ALIVE => 'Alive',
             static::STATUS_DEPRECATED => 'Deprecated',
         ];
     }
