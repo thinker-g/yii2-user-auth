@@ -22,13 +22,13 @@ class UserCommand extends Controller
      * Super agent account model configuration.
      * @var unknown
      */
-    public $superAgentAcctModel = 'thinker_g\UserAuth\models\SuperAgentAccount';
+    public $superAgentAcctModel = 'thinker_g\UserAuth\models\ars\SuperAgentAccount';
 
     /**
-     * Status of the user, default to "pending" status.
+     * Status of the user, default to "alive" status.
      * @var string
      */
-    public $status = User::STATUS_PENDING;
+    public $status = User::STATUS_ALIVE;
 
     /**
      * Primary email of the user.

@@ -17,7 +17,7 @@ class UserMigration extends CreationMigration
                 'username' => 'VARCHAR(255) NOT NULL',
                 'primary_email' => 'VARCHAR(255) NULL',
                 'password_hash' => 'VARCHAR(255) NULL',
-                'status' => 'SMALLINT(6) NULL',
+                'status' => 'TINYINT(3) UNSIGNED NULL',
                 'auth_key' => 'VARCHAR(64) NULL',
                 'password_reset_token' => 'VARCHAR(255) NULL',
                 'created_at' => 'TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP',

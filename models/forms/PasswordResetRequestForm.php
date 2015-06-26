@@ -49,7 +49,7 @@ class PasswordResetRequestForm extends CredentialForm
             ['email', 'exist',
                 'targetClass' => $this->getCredentialModelClass(),
                 'targetAttribute' => 'primary_email',
-                'filter' => ['>=', 'status', User::STATUS_PENDING],
+                'filter' => ['>=', 'status', User::STATUS_ALIVE],
                 'message' => 'There is no user with such email.'
             ],
         ];
