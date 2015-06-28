@@ -41,6 +41,7 @@ class Module extends \yii\base\Module
         ['label' => 'User Infos', 'url' => ['user-info/index']],
         ['label' => 'Super Agents', 'url' => ['super-agent/index']],
         ['label' => 'Add New User', 'url' => ['user/create']],
+        ['label' => 'Who Am I', 'url' => ['user/who-am-i']],
     ];
 
     /**
@@ -110,8 +111,11 @@ class Module extends \yii\base\Module
         'user' => [
             [
                 'model' => 'thinker_g\UserAuth\models\ars\User',
-                'search' => 'thinker_g\UserAuth\models\ars\UserSearch'
+                'search' => 'thinker_g\UserAuth\models\ars\UserSearch',
             ],
+            'who-am-i' => [
+                'view' => 'view',
+            ]
         ],
         'user-ext-account' => [
             [
