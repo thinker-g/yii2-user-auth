@@ -2,7 +2,7 @@
 namespace thinker_g\UserAuth\controllers;
 
 use Yii;
-use thinker_g\Helpers\controllers\CrudController;
+use thinker_g\Helpers\controllers\ModelViewController;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
@@ -11,7 +11,7 @@ use yii\filters\AccessControl;
  * @author Thinker_g
  * @property \thinker_g\UserAuth\Module $module
  */
-abstract class BaseAuthController extends CrudController
+abstract class BaseAuthController extends ModelViewController
 {
     /**
      * @inheritdoc
