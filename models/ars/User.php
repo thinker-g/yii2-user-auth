@@ -2,12 +2,11 @@
 namespace thinker_g\UserAuth\models\ars;
 
 use Yii;
-use yii\db\ActiveRecord;
-use yii\db\ActiveQuery;
-use yii\db\Expression;
+use thinker_g\UserAuth\interfaces\Authenticatable;
 use yii\web\IdentityInterface;
 use thinker_g\UserAuth\interfaces\PasswordResettable;
-use thinker_g\UserAuth\interfaces\FindByLogin;
+use yii\db\ActiveRecord;
+use yii\db\Expression;
 use yii\base\NotSupportedException;
 
 /**
@@ -29,7 +28,7 @@ use yii\base\NotSupportedException;
  * @property string $last_login_at
  * @property array $userExtAccounts
  */
-class User extends ActiveRecord implements IdentityInterface, FindByLogin, PasswordResettable
+class User extends ActiveRecord implements IdentityInterface, Authenticatable, PasswordResettable
 {
     /**
      * User is deprecated.
@@ -155,6 +154,39 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
 
     /**
      * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\Authenticatable::findByLogin()
+     */
+    public static function findByLogin($login)
+    {
+        return static::find()->where(['and',
+            self::STATUS_ALIVE . '=status&' . self::STATUS_ALIVE,
+            ['or',
+                ['username' => $login],
+                ['primary_email' => $login],
+            ],
+        ])->one();
+    }
+
+    /**
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\Authenticatable::validatePassword()
+     */
+    public function validatePassword($password)
+    {
+        return $this->password_hash && Yii::$app->security->validatePassword($password, $this->password_hash);
+    }
+
+    /**
+     * @inheritdoc
+     * @see \yii\web\IdentityInterface::getId()
+     */
+    public function getId()
+    {
+        return $this->getPrimaryKey();
+    }
+
+    /**
+     * @inheritdoc
      * @see \yii\web\IdentityInterface::findIdentity()
      */
     public static function findIdentity($id)
@@ -177,63 +209,6 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
 
     /**
      * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::findByLogin()
-     */
-    public static function findByLogin($login)
-    {
-        return static::find()->where(['and',
-            self::STATUS_ALIVE . '=status&' . self::STATUS_ALIVE,
-            ['or',
-                ['username' => $login],
-                ['primary_email' => $login],
-            ],
-        ])->one();
-    }
-
-    /**
-     * Finds user by password reset token
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::findByPasswordResetToken()
-     */
-    public static function findByPasswordResetToken($token)
-    {
-        if (!static::isPasswordResetTokenValid($token)) {
-            return null;
-        }
-
-        return static::find()->where([
-            'and',
-            ['password_reset_token' => $token],
-            self::STATUS_ALIVE . '=status&' . self::STATUS_ALIVE
-        ])->one();
-    }
-
-    /**
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::isPasswordResetTokenValid()
-     */
-    public static function isPasswordResetTokenValid($token)
-    {
-        if (empty($token)) {
-            return false;
-        }
-        $expire = self::$passwordResetTokenExpire;
-        $parts = explode('_', $token);
-        $timestamp = (int) end($parts);
-        return $timestamp + $expire >= time();
-    }
-
-    /**
-     * @inheritdoc
-     * @see \yii\web\IdentityInterface::getId()
-     */
-    public function getId()
-    {
-        return $this->getPrimaryKey();
-    }
-
-    /**
-     * @inheritdoc
      * @see \yii\web\IdentityInterface::getAuthKey()
      */
     public function getAuthKey()
@@ -252,16 +227,7 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
 
     /**
      * @inheritdoc
-     * @see \yii\web\IdentityInterface::validatePassword()
-     */
-    public function validatePassword($password)
-    {
-        return $this->password_hash && Yii::$app->security->validatePassword($password, $this->password_hash);
-    }
-
-    /**
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::setPassword()
+     * @see \thinker_g\UserAuth\interfaces\PasswordSettable::setPassword()
      */
     public function setPassword($password)
     {
@@ -273,11 +239,62 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
 
     /**
      * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::getPassword()
+     * @see \thinker_g\UserAuth\interfaces\PasswordSettable::getPassword()
      */
     public function getPassword()
     {
         return $this->_pswd;
+    }
+
+    /**
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\PasswordResettable::generatePasswordResetToken()
+     */
+    public function generatePasswordResetToken()
+    {
+        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
+    }
+
+    /**
+     * Finds user by password reset token
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\PasswordResettable::findByPasswordResetToken()
+     */
+    public static function findByPasswordResetToken($token)
+    {
+        if (!static::isPasswordResetTokenValid($token)) {
+            return null;
+        }
+
+        return static::find()->where([
+            'and',
+            ['password_reset_token' => $token],
+            self::STATUS_ALIVE . '=status&' . self::STATUS_ALIVE
+        ])->one();
+    }
+
+    /**
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\PasswordResettable::isPasswordResetTokenValid()
+     */
+    public static function isPasswordResetTokenValid($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+        $expire = self::$passwordResetTokenExpire;
+        $parts = explode('_', $token);
+        $timestamp = (int) end($parts);
+        return $timestamp + $expire >= time();
+    }
+
+    /**
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\PasswordResettable::removePasswordResetToken()
+     */
+    public function removePasswordResetToken()
+    {
+        $this->password_reset_token = null;
     }
 
     /**
@@ -286,24 +303,6 @@ class User extends ActiveRecord implements IdentityInterface, FindByLogin, Passw
     public function generateAuthKey()
     {
         $this->auth_key = Yii::$app->security->generateRandomString();
-    }
-
-    /**
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::generatePasswordResetToken()
-     */
-    public function generatePasswordResetToken()
-    {
-        $this->password_reset_token = Yii::$app->security->generateRandomString() . '_' . time();
-    }
-
-    /**
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\CredentialInterface::removePasswordResetToken()
-     */
-    public function removePasswordResetToken()
-    {
-        $this->password_reset_token = null;
     }
 
     /**

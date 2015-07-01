@@ -5,7 +5,7 @@ use Yii;
 use yii\base\Model;
 use yii\base\NotSupportedException;
 use thinker_g\UserAuth\interfaces\CredentialIdentity;
-use thinker_g\UserAuth\interfaces\FindByLogin;
+use thinker_g\UserAuth\interfaces\Authenticatable;
 use yii\web\IdentityInterface;
 
 /**
@@ -38,7 +38,7 @@ class LoginForm extends CredentialForm
      * Default to 7 days. This parameter will only be read when [[rememberMe]] is true.
      * @var int
      */
-    public $keepLoginDuration;
+    public $rememberMeDuration = 604800;
 
     private $_user = false;
 
@@ -111,8 +111,8 @@ class LoginForm extends CredentialForm
     public function login()
     {
         if ($this->validate()) {
-            //todo keepLoginDuration default value not implemented.
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? $this->keepLoginDuration : 0);
+            //todo rememberMeDuration default value not implemented.
+            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? $this->rememberMeDuration : 0);
         } else {
             return false;
         }
@@ -127,10 +127,10 @@ class LoginForm extends CredentialForm
     {
         if ($this->_user === false) {
             $userModel = Yii::createObject($this->getCredentialModelClass());
-            if (!$userModel instanceof FindByLogin) {
+            if (!$userModel instanceof Authenticatable) {
                 throw new NotSupportedException(
                     get_class($userModel)
-                    . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\FindByLogin.'
+                    . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\Authenticatable.'
                 );
             }
             $this->_user = $userModel::findByLogin($this->username);
