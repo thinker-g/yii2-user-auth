@@ -14,6 +14,6 @@ class UserController extends BaseAdminController
         if (is_null($_GET['id'] = \Yii::$app->getUser()->id)) {
             throw new ForbiddenHttpException('You must login to perform this action.');
         }
-        return $this->actionView();
+        return $this->runAction('view');
     }
 }
