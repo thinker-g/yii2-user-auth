@@ -52,13 +52,6 @@ class Module extends \yii\base\Module
     public $controllerNamespace = 'thinker_g\UserAuth\controllers\front';
 
     /**
-     * Login form model configuration.
-     * Set it to "thinker_g\UserAuth\models\SuperLoginForm" for authenticating user using SuperAgentAccount in backend.
-     * @var string|array
-     */
-    public $modelLoginForm = 'thinker_g\UserAuth\models\forms\LoginForm';
-
-    /**
      * Signup form model configuration.
      * Used in frontend.
      * @var string|array
@@ -91,8 +84,10 @@ class Module extends \yii\base\Module
      */
     public $mvMap = [
         'auth' => [
-            'request-password-reset' => ['view' => 'requestPasswordReset'],
-            'reset-password' => ['view' => 'resetPassword']
+            'login' => ['model' => 'thinker_g\UserAuth\models\forms\LoginForm'],
+            'signup' => ['model' => 'thinker_g\UserAuth\models\forms\SignupForm'],
+            'request-password-reset' => ['model' => 'thinker_g\UserAuth\models\forms\PasswordResetRequestForm'],
+            'reset-password' => ['model' => 'thinker_g\UserAuth\models\forms\ResetPasswordForm'],
         ]
     ];
 
@@ -105,6 +100,7 @@ class Module extends \yii\base\Module
             ['model' => 'thinker_g\UserAuth\models\ars\User'],
         ],
         'auth' => [
+            'login' => ['model' => 'thinker_g\UserAuth\models\forms\LoginForm'],
             'request-password-reset' => ['view' => 'requestPasswordResetToken'],
             'reset-password' => ['view' => 'resetPassword'],
         ],

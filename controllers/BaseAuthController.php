@@ -17,6 +17,20 @@ abstract class BaseAuthController extends ModelViewController
      * @inheritdoc
      * @var string
      */
+    public $defaultAction = 'login';
+
+    /**
+     * @inheritdoc
+     * @var array
+     */
+    public $controllerMvMap = [
+        'login' => ['model' => 'thinker_g\UserAuth\models\forms\LoginForm'],
+    ];
+
+    /**
+     * @inheritdoc
+     * @var string
+     */
     public $moduleMvMapAttr = 'mvMap';
 
     /**
@@ -55,7 +69,8 @@ abstract class BaseAuthController extends ModelViewController
             return $this->goHome();
         }
 
-        $model = Yii::createObject($this->module->modelLoginForm);
+        $model = Yii::createObject($this->getModelClass());
+
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         } else {

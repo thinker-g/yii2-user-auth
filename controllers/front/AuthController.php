@@ -13,18 +13,24 @@ use yii\web\BadRequestHttpException;
  */
 class AuthController extends BaseAuthController
 {
+
     /**
      * @inheritdoc
-     * @var string
+     * @var array
      */
-    public $defaultAction = 'login';
+    public $controllerMvMap = [
+        'login' => ['model' => 'thinker_g\UserAuth\models\forms\LoginForm'],
+        'signup' => ['model' => 'thinker_g\UserAuth\models\forms\SignupForm'],
+        'request-password-reset' => ['model' => 'thinker_g\UserAuth\models\forms\PasswordResetRequestForm'],
+        'reset-password' => ['model' => 'thinker_g\UserAuth\models\forms\ResetPasswordForm'],
+    ];
 
     /**
      * Signup action.
      */
     public function actionSignup()
     {
-        $model = Yii::createObject($this->module->modelSignupForm);
+        $model = Yii::createObject($this->getModelClass());
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
                 if (Yii::$app->getUser()->login($user)) {
@@ -44,7 +50,7 @@ class AuthController extends BaseAuthController
      */
     public function actionRequestPasswordReset()
     {
-        $model = Yii::createObject($this->module->modelPasswordResetRequestForm);
+        $model = Yii::createObject($this->getModelClass());
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($model->sendEmail()) {
                 Yii::$app->getSession()->setFlash('success', 'Check your email for further instructions.');
@@ -71,13 +77,11 @@ class AuthController extends BaseAuthController
     public function actionResetPassword($token)
     {
         try {
-            if (is_string($this->module->modelResetPasswordForm)) {
-                $this->module->modelResetPasswordForm = [
-                    'class' => $this->module->modelResetPasswordForm
-                ];
+            if (is_string($modelClass = $this->getModelClass())) {
+                $modelClass = ['class' => $modelClass];
             }
-            $this->module->modelResetPasswordForm['token'] = $token;
-            $model = Yii::createObject($this->module->modelResetPasswordForm);
+            $modelClass['token'] = $token;
+            $model = Yii::createObject($modelClass);
         } catch (InvalidParamException $e) {
             throw new BadRequestHttpException($e->getMessage());
         }

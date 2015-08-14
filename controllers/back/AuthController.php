@@ -12,11 +12,6 @@ use thinker_g\UserAuth\controllers\BaseAuthController;
  */
 class AuthController extends BaseAuthController
 {
-    /**
-     * @inheritdoc
-     * @var string
-     */
-    public $defaultAction = 'login';
 
     /**
      * @inheritdoc
