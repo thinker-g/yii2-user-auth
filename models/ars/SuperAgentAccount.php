@@ -25,26 +25,11 @@ class SuperAgentAccount extends UserExtAccount
     public function rules()
     {
         return [
-            [['user_id', 'ext_user_id'], 'integer'],
+            ['user_id', 'integer'],
+            [['user_id', 'password', 'from_source'], 'required'],
+            [['email', 'from_source'], 'string', 'max' => 255],
             [['user_id', 'from_source'], 'unique', 'targetAttribute' => ['user_id', 'from_source']],
-            [['password', 'created_at', 'updated_at'], 'safe'],
-            [['from_source'], 'string', 'max' => 64],
-            [['access_token', 'email'], 'string', 'max' => 255]
         ];
-    }
-
-    public function __set($name, $value)
-    {
-        if ($name == 'from_source') {
-            $value = static::SRC_SUPER_AGENT;
-        }
-        parent::__set($name, $value);
-    }
-
-    public function beforeSave($insert)
-    {
-        $this->from_source = static::SRC_SUPER_AGENT;
-        return parent::beforeSave($insert);
     }
 
     public function setPassword($password)
@@ -57,5 +42,30 @@ class SuperAgentAccount extends UserExtAccount
     public function getPassword()
     {
         return $this->_superPassword;
+    }
+
+    /**
+     * Get agent types in array, where keys are type ids, values are type name. 
+     *
+     * @return array
+     */
+    public static function availableSources()
+    {
+        return [
+            'super_agent' => 'Super Agent',
+            'test_agent' => 'Test Agent',
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\models\ars\UserExtAccount::attributeLabels()
+     */
+    public function attributeLabels()
+    {
+        return [
+            'user_id' => Yii::t('app', 'Target User ID'),
+            'from_source' => Yii::t('app', 'Agent Type'),
+        ];
     }
 }

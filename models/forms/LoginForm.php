@@ -48,13 +48,16 @@ class LoginForm extends CredentialForm
      */
     public function rules()
     {
+        if (is_string($this->passwordValidator)) {
+            $this->passwordValidator = [$this->passwordValidator];
+        }
         return [
             // username and password are both required
             [['username', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
-            ['password', $this->passwordValidator],
+            array_merge(['password'], $this->passwordValidator),
         ];
     }
 
@@ -89,11 +92,18 @@ class LoginForm extends CredentialForm
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validateSuperPassword($attribute, $params)
+    public function validateAgentPassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
+            $params = array_merge([
+                'class' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
+                'agent_type' => 'super_agent',
+            ]);
             $user = $this->getUser();
-            if (!($user && ($superAcct = $user->superAgentAcct) && $superAcct->access_token)) {
+            $superAcct = $user->hasOne($params['class'], ['user_id' => 'id'])
+                ->where(['from_source' => $params['agent_type']])
+                ->one();
+            if (!($user && $superAcct && $superAcct->access_token)) {
                 $this->addError($attribute, 'Invalide Credential');
                 return;
             }

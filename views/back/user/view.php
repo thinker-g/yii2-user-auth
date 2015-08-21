@@ -97,14 +97,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 ], [
                     'class' => 'btn btn-success'
                 ]) ?>
-                <?php if (!$model->superAgentAcct): ?>
-                    <?= Html::a(Yii::t('app', 'Grant Super Agent account'), [
-                        '/' . $this->context->module->uniqueId . '/super-agent/create',
-                        'SuperAgentAccount[user_id]' => $model->primaryKey
-                    ], [
-                        'class' => 'btn btn-info'
-                    ]) ?>
-                <?php endif; ?>
+                <?= Html::a(Yii::t('app', 'Grant Super Agent account'), [
+                    '/' . $this->context->module->uniqueId . '/super-agent/create',
+                    'SuperAgentAccount[user_id]' => $model->primaryKey
+                ], [
+                    'class' => 'btn btn-info'
+                ]) ?>
             </span>
         </div><!-- $.panel-heading -->
         <?= GridView::widget([

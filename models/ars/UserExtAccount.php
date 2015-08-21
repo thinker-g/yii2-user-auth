@@ -20,7 +20,6 @@ use Yii;
  */
 class UserExtAccount extends \yii\db\ActiveRecord
 {
-    const SRC_SUPER_AGENT = 'super_agent';
 
     /**
      * @inheritdoc
@@ -62,10 +61,19 @@ class UserExtAccount extends \yii\db\ActiveRecord
         ];
     }
 
-    public function availableSources()
+    /**
+     * Available open-auth account sources.
+     *
+     * @return array
+     */
+    public static function availableSources()
     {
         return [
-            static::SRC_SUPER_AGENT => static::SRC_SUPER_AGENT
+            'facebook' => 'Facebook',
+            'twitter' => 'Twitter',
+            'google_account' => 'Google Account',
+            'sina_weibo' => 'Sina Weibo',
+            'qq' => 'QQ',
         ];
     }
 

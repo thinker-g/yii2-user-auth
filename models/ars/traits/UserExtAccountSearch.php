@@ -88,11 +88,11 @@ trait UserExtAccountSearch
             'ext_user_id' => $this->ext_user_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'from_source' => $this->availableSources(),
         ]);
 
         $query->andFilterWhere(['like', parent::tableName() . '.username', $this->username])
             ->andFilterWhere(['like', parent::tableName() . '.primary_email', $this->primary_email])
-            ->andFilterWhere(['like', 'from_source', $this->from_source])
             ->andFilterWhere(['like', 'access_token', $this->access_token])
             ->andFilterWhere(['like', 'email', $this->email]);
 

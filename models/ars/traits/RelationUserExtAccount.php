@@ -12,15 +12,6 @@ use thinker_g\UserAuth\models\ars\UserExtAccount;
  */
 trait RelationUserExtAccount
 {
-    /**
-     * Get super agent account of current user.
-     * @return ActiveQuery
-     */
-    public function getSuperAgentAcct()
-    {
-        return $this->hasOne(UserExtAccount::className(), ['user_id' => 'id'])
-        ->where(['from_source' => UserExtAccount::SRC_SUPER_AGENT]);
-    }
 
     /**
      * Get ext accounts of current user.

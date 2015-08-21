@@ -18,12 +18,12 @@ class SuperAgentController extends BaseAdminController
      */
     protected function findModel($id)
     {
-        if (is_array($modelClass = $this->getModelClass('model'))) {
+        if (is_array($modelClass = $this->getModelClass(static::KEY_MODEL))) {
             $modelClass = $modelClass['class'];
         }
         $model = $modelClass::findOne([
             $modelClass::primaryKey()[0] => $id,
-            'from_source' => $modelClass::SRC_SUPER_AGENT
+            'from_source' => array_keys($modelClass::availableSources())
         ]);
         if (!is_null($model)) {
             return $model;
