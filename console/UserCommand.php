@@ -22,7 +22,7 @@ class UserCommand extends Controller
      * Super agent account model configuration.
      * @var unknown
      */
-    public $superAgentAcctModel = 'thinker_g\UserAuth\models\ars\SuperAgentAccount';
+    public $agentAcctModelClass = 'thinker_g\UserAuth\models\ars\SuperAgentAccount';
 
     /**
      * Status of the user, default to "alive" status.
@@ -37,6 +37,12 @@ class UserCommand extends Controller
     public $email;
 
     /**
+     * Agent account type while granting super agent account.
+     * @var string
+     */
+    public $agent_type = 'super_agent';
+
+    /**
      * @inheritdoc
      * @see \yii\console\Controller::options()
      */
@@ -44,6 +50,7 @@ class UserCommand extends Controller
     {
         $options = [
             'add' => ['email', 'status'],
+            'grant-agent' => ['agent_type'],
         ];
         return isset($options[$actionID]) ? $options[$actionID] : [];
     }
@@ -78,7 +85,7 @@ class UserCommand extends Controller
             $user->status = $this->status;
         }
         if ($isSucceeded = $user->save()) {
-            $this->stdout("Added user: [{$user->id}]{$username}." . PHP_EOL, Console::FG_GREEN);
+            $this->stdout("User added: <ID: {$user->id}>{$username}." . PHP_EOL, Console::FG_GREEN);
         } else {
             $this->stdout("Fail to add user: {$username}." . PHP_EOL, Console::FG_RED);
             foreach ($user->getErrors() as $errs)
@@ -91,18 +98,18 @@ class UserCommand extends Controller
     /**
      * Grant a super agent account with a new password to an exsiting user ID.
      * @param int $user_id Target user ID.
-     * @param string $super_password Super password of this user for logging in backend of the site.
+     * @param string $agent_password Super password of this user for logging in backend of the site.
      * @return boolean
      */
-    public function actionGrantSuperAgent($user_id, $super_password)
+    public function actionGrantAgent($user_id, $agent_password)
     {
-        $superAgentAcct = Yii::createObject($this->superAgentAcctModel);
+        $superAgentAcct = Yii::createObject($this->agentAcctModelClass);
         // $superAgentAcct = new \thinker_g\UserAuth\models\SuperAgentAccount();
-        $superAgentAcct->from_source = $superAgentAcct::SRC_SUPER_AGENT;
+        $superAgentAcct->from_source = $this->agent_type;
         $superAgentAcct->user_id = $user_id;
-        $superAgentAcct->password = $super_password;
+        $superAgentAcct->password = $agent_password;
         if ($isSucceeded = $superAgentAcct->save()) {
-            $this->stdout("Super agent granted." . PHP_EOL, Console::FG_GREEN);
+            $this->stdout("Agent account granted." . PHP_EOL, Console::FG_GREEN);
         } else {
             $this->stdout("Operation failed." . PHP_EOL, Console::FG_RED);
             foreach ($superAgentAcct->getErrors() as $errs)
