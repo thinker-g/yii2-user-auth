@@ -40,13 +40,14 @@ $this->params['breadcrumbs'][] = $this->title;
                     return isset($model->availableStatus()[$model->status])
                         ? $model::availableStatus()[$model->status] . ' [' . $model->status . ']'
                         : $model->status;
-                }
+                },
+                'filter' => $searchModel->availableStatus(),
             ],
             // 'auth_key',
             // 'password_reset_token',
             'created_at',
             // 'updated_at',
-            'last_login_at',
+            'last_login_at:raw:Last Login',
 
             ['class' => 'yii\grid\ActionColumn', 'header' => Yii::t('app', 'Actions')],
         ],
