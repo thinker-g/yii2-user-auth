@@ -115,7 +115,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ]),
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
-                'from_source',
+                'from_source:raw:Acct. Type',
                 'ext_user_id',
                 'email:email',
                 'created_at',

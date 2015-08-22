@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel thinker_g\UserAuth\models\ars\UserExtAccountSearch */
+/* @var $searchModel thinker_g\UserAuth\models\ars\SuperAgentAccountSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = Yii::t('app', 'Super Agents');
@@ -28,9 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel, //@todo filter not working correctly
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
-
             [
                 'attribute' => 'username',
                 'label' => 'Owner',
@@ -43,7 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             ],
-            'from_source:ntext:Agent Type',
+            [
+                'attribute' => 'from_source',
+                'filter' => $searchModel->availableSources(),
+            ],
             'email:email:Account Email',
             'created_at',
             ['class' => 'yii\grid\ActionColumn', 'header'  => Yii::t('app', 'Actions')],

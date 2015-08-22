@@ -24,6 +24,7 @@ trait SuperAgentAccountSearch
                 'username',
                 'primary_email',
                 'access_token',
+                'from_source',
                 'email',
                 'created_at',
                 'updated_at'
@@ -74,12 +75,13 @@ trait SuperAgentAccountSearch
         $query->andFilterWhere([
             self::tableName() . '.id' => $this->id,
             'user_id' => $this->user_id,
-            'from_source' => $this->from_source ? $this->form_source : array_keys($this->availableSources()),
+            'from_source' => $this->from_source ? $this->from_source : array_keys($this->availableSources()),
         ]);
 
         $query->andFilterWhere(['like', User::tableName() . '.username', $this->username])
             ->andFilterWhere(['like', User::tableName() . '.primary_email', $this->primary_email])
             ->andFilterWhere(['like', 'access_token', $this->access_token])
+            ->andFilterWhere(['like', 'from_source', $this->from_source])
             ->andFilterWhere(['like', 'email', $this->email])
             ->andFilterWhere(['like', self::tableName() . '.created_at', $this->created_at])
             ->andFilterWhere(['like', self::tableName() . '.updated_at', $this->updated_at]);

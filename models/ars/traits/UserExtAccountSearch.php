@@ -88,7 +88,7 @@ trait UserExtAccountSearch
             'ext_user_id' => $this->ext_user_id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'from_source' => array_keys($this->availableSources()),
+            'from_source' => $this->from_source ? $this->form_source : array_keys($this->availableSources()),
         ]);
 
         $query->andFilterWhere(['like', parent::tableName() . '.username', $this->username])

@@ -27,8 +27,11 @@ foreach ($stats as &$entry) {
     <p><strong>Tips: </strong></p>
     <ol>
         <li><span class="label label-info">External Account</span>s are user accounts preserved for OAuth login from 3rd party sites.</li>
-        <li><span class="label label-info">Super Agent</span> is a special type of <span class="label label-info">External Account</span>. Users who have been granted a super agent account, can login to back-office using his username and the password set in his super agent account.</li>
-        <li>To grant <span class="label label-info">Super Agent</span> to a user: open the user's "view" page, click on button <span class="label label-info">Grant Super Agent Account</span>. If a user has already had a super agent account, the button will not be shown.</li>
+        <li>
+            <span class="label label-info">Super Agent</span> account is a group of special <span class="label label-info">External Account</span>s, in which the "from_source" is used for agent type(default to "super_agent") and "access_token" is for password hash code. <br />
+            Users who have been granted a super agent account, can login to a special sub-site using his username and the password set in his super agent account. Check options of "LoginForm" for details.
+        </li>
+        <li>To grant <span class="label label-info">Super Agent</span> accounts to a user: open the user's "view" page, click on button <span class="label label-info">Grant Super Agent Account</span>. If a user has already had a super agent account, the button will not be shown.</li>
     </ol>
     <div class="panel panel-default">
         <div class="panel-heading">User statistics</div>
