@@ -39,8 +39,8 @@ class Module extends \yii\base\Module
         ['label' => 'Users', 'url'=>['user/index']],
         ['label' => 'External Accounts', 'url' => ['user-ext-account/index']],
         ['label' => 'User Infos', 'url' => ['user-info/index']],
-        ['label' => 'Super Agents', 'url' => ['super-agent/index']],
         ['label' => 'Add New User', 'url' => ['user/create']],
+        ['label' => 'Super Agents', 'url' => ['super-agent/index']],
         ['label' => 'Who Am I', 'url' => ['user/who-am-i']],
     ];
 
