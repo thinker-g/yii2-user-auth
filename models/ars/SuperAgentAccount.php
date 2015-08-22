@@ -52,8 +52,8 @@ class SuperAgentAccount extends UserExtAccount
     public static function availableSources()
     {
         return [
+            'super_admin' => 'Super Admin',
             'super_agent' => 'Super Agent',
-            'test_agent' => 'Test Agent',
         ];
     }
 

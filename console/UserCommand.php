@@ -40,7 +40,7 @@ class UserCommand extends Controller
      * Agent account type while granting super agent account.
      * @var string
      */
-    public $agent_type = 'super_agent';
+    public $agent_type = 'super_admin';
 
     /**
      * @inheritdoc

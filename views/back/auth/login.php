@@ -12,7 +12,7 @@ $this->title = 'Login';
 if (is_array($model->passwordValidator)) {
     if ($model->passwordValidator[0] == 'validateAgentPassword') {
         if (!isset($model->passwordValidator['params']['agentType'])) {
-            $model->passwordValidator['params']['agentType'] = 'super_agent';
+            $model->passwordValidator['params']['agentType'] = 'super_admin';
         }
         $pswdHint = 'Validating agent account. Type key: ' . $model->passwordValidator['params']['agentType'];
     } else {

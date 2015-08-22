@@ -26,7 +26,7 @@ class LoginForm extends CredentialForm
      *        'validateAgentPassword',
      *        'params' => [
      *            'agentAcctModelClass' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
-     *            'agentType' => 'super_agent'
+     *            'agentType' => 'super_admin'
      *        ]
      *    ]
      *    ~~~
@@ -112,7 +112,7 @@ class LoginForm extends CredentialForm
                 // Validate user account.
                 $params = array_merge([
                     'agentAcctModelClass' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
-                    'agentType' => 'super_agent',
+                    'agentType' => 'super_admin',
                 ], $params ? $params : []);
                 $superAcct = $user->hasOne($params['agentAcctModelClass'], ['user_id' => 'id'])
                     ->where(['from_source' => $params['agentType']])
