@@ -105,6 +105,13 @@ class UserCommand extends Controller
     {
         $superAgentAcct = Yii::createObject($this->agentAcctModelClass);
         // $superAgentAcct = new \thinker_g\UserAuth\models\SuperAgentAccount();
+        if (!array_key_exists($this->agent_type, $superAgentAcct::availableSources())) {
+            $notice = "Account type: {$this->agent_type} cannot be found in current account model, continue?";
+            if (!$this->confirm(Console::ansiFormat($notice, [Console::FG_YELLOW]), false)) {
+                $this->stdout("User canceled." . PHP_EOL, Console::FG_GREEN);
+                return self::EXIT_CODE_NORMAL;
+            }
+        }
         $superAgentAcct->from_source = $this->agent_type;
         $superAgentAcct->user_id = $user_id;
         $superAgentAcct->password = $agent_password;
