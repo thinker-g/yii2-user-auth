@@ -36,6 +36,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'attributes' => [
                 'id',
                 'user_id',
+                'from_source',
                 'access_token',
                 'ext_user_id',
                 'email:email',

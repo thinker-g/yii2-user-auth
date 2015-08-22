@@ -25,14 +25,15 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'filterModel' => $searchModel, //@todo filter not working correctly
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
+
             [
                 'attribute' => 'username',
-                'label' => 'Username',
+                'label' => 'Owner',
                 'format' => 'raw',
                 'value' => function ($model) {
                     if ($model->user) {
@@ -42,15 +43,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 }
             ],
-            [
-                'attribute' => 'primary_email',
-                'format' => 'email',
-                'label' => 'Primary email',
-                'value' => 'user.primary_email'
-            ],
-            // 'email:email:Account Email',
+            'from_source:ntext:Agent Type',
+            'email:email:Account Email',
             'created_at',
-            'updated_at',
             ['class' => 'yii\grid\ActionColumn', 'header'  => Yii::t('app', 'Actions')],
         ],
     ]); ?>

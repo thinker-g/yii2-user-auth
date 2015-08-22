@@ -45,7 +45,7 @@ class SuperAgentAccount extends UserExtAccount
     }
 
     /**
-     * Get agent types in array, where keys are type ids, values are type name. 
+     * Get agent types in array, where keys are type ids, values are type name.
      *
      * @return array
      */

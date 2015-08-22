@@ -16,11 +16,24 @@ class LoginForm extends CredentialForm
 
     /**
      * Validator method name used by password.
-     * Set to "validateSuperPassword" to verify password stored in super agent account model.
-     * This must a method exists in the form model (extend this model for adding more validators).
-     * @var string
+     * Two available built-in validators:
+     * 1. `validatePrimaryPassword`: The default validtor, reads password hash from the "user" model.
+     * 2. `validateAgentPassword`: Will use corresponding "user_ext_account" and read password hash from its
+     *    "access_token". This can be an array, an extra key: "params" is recognizable.
+     *    Example with default values:
+     *    ~~~
+     *    [
+     *        'validateAgentPassword',
+     *        'params' => [
+     *            'class' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
+     *            'agentType' => 'super_agent'
+     *        ]
+     *    ]
+     *    ~~~
+     *
+     * @var string|array
      */
-    public $passwordValidator = 'validatePassword';
+    public $passwordValidator = 'validatePrimaryPassword';
 
     public $username;
 
@@ -68,7 +81,7 @@ class LoginForm extends CredentialForm
      * @param string $attribute the attribute currently being validated
      * @param array $params the additional name-value pairs given in the rule
      */
-    public function validatePassword($attribute, $params)
+    public function validatePrimaryPassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
             $user = $this->getUser();
@@ -90,25 +103,31 @@ class LoginForm extends CredentialForm
      * This method serves as the inline validation for password.
      *
      * @param string $attribute the attribute currently being validated
-     * @param array $params the additional name-value pairs given in the rule
+     * @param array $params Keys "acctModelClass" & "agentType" can be recognized.
      */
     public function validateAgentPassword($attribute, $params)
     {
         if (!$this->hasErrors()) {
-            $params = array_merge([
-                'class' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
-                'agent_type' => 'super_agent',
-            ]);
-            $user = $this->getUser();
-            $superAcct = $user->hasOne($params['class'], ['user_id' => 'id'])
-                ->where(['from_source' => $params['agent_type']])
-                ->one();
-            if (!($user && $superAcct && $superAcct->access_token)) {
-                $this->addError($attribute, 'Invalide Credential');
-                return;
-            }
-            if (!Yii::$app->security->validatePassword($this->password, $superAcct->access_token)) {
-                $this->addError($attribute, 'Incorrect password');
+            if ($user = $this->getUser()) {
+                // Validate user account.
+                $params = array_merge([
+                    'acctModelClass' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
+                    'agentType' => 'super_agent',
+                ], $params ? $params : []);
+                $superAcct = $user->hasOne($params['acctModelClass'], ['user_id' => 'id'])
+                    ->where(['from_source' => $params['agentType']])
+                    ->one();
+                if (is_null($superAcct)) {
+                    return $this->addError($attribute, 'Account not found.');
+                } elseif (!$superAcct->access_token) {
+                    return $this->addError($attribute, 'Invalid account.');
+                } elseif (!Yii::$app->security->validatePassword($this->password, $superAcct->access_token)) {
+                    return $this->addError($attribute, 'Incorrect password');
+                } // else {}
+
+            } else {
+                // User not found.
+                return $this->addError($attribute, 'User not found.');
             }
         }
     }
