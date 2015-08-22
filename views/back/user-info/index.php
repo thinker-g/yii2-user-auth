@@ -45,7 +45,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'board_type:ntext',
             'ski_age',
 
-            ['class' => 'yii\grid\ActionColumn', 'header'  => Yii::t('app', 'Actions')],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'header'  => Yii::t('app', 'Actions'),
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    return [$action, 'user_id' => $model->user_id];
+                }
+            ],
         ],
     ]); ?>
 

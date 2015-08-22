@@ -59,19 +59,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 <?php if ($model->userInfo): ?>
                     <?= Html::a(Yii::t('app', 'Update'), [
                         '/' . $this->context->module->uniqueId . '/user-info/update',
-                        'id' => $model->userInfo->primaryKey
+                        'user_id' => $model->userInfo->primaryKey
                     ], [
                         'class' => 'btn btn-primary'
-                    ]) ?>
-                    <?= Html::a(Yii::t('app', 'Delete'), [
-                        '/' . $this->context->module->uniqueId . '/user-info/delete',
-                        'id' => $model->userInfo->primaryKey
-                    ], [
-                        'class' => 'btn btn-danger',
-                        'data' => [
-                            'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                            'method' => 'post',
-                        ],
                     ]) ?>
                 <?php else: ?>
                     <?= Html::a(Yii::t('app', 'Create Additional Info'), [

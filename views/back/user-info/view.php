@@ -21,8 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="panel panel-default">
         <div class="panel-heading">
             <span class="btn-group">
-                <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->user_id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->user_id], [
+                <?= Html::a(Yii::t('app', 'Update'), ['update', 'user_id' => $model->user_id], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'user_id' => $model->user_id], [
                     'class' => 'btn btn-danger',
                     'data' => [
                         'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
@@ -51,7 +51,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'password_hash',
                 [
                     'attribute' => 'status',
-                    'value' => $model->user->availableStatus()[$model->user->status]
+                    'value' => isset($model->user->availableStatus()[$model->user->status])
+                        ? $model->user->availableStatus()[$model->user->status]
+                        : $model->user->status,
                 ],
                 'created_at',
                 'updated_at',
