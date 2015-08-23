@@ -151,5 +151,42 @@ class UserCommand extends Controller
 
         return self::EXIT_CODE_NORMAL;
     }
+
+    /**
+     * Revoke agent account from a user by user id.
+     *
+     * @param int $user_id
+     * @param string $agent_type
+     */
+    public function actionRevokeAgent($user_id, $agent_type)
+    {
+        $superAgentAcct = Yii::createObject($this->agentAcctModelClass);
+        // $superAgentAcct = new \thinker_g\UserAuth\models\SuperAgentAccount();
+        if (!array_key_exists($agent_type, $superAgentAcct::availableSources())) {
+            $warning = "Account type: {$agent_type} cannot be found in current account model.\n";
+            $this->stdout($warning, Console::FG_YELLOW);
+        }
+        $targetAcct = $superAgentAcct::find()
+        ->where(['user_id' => $user_id, 'from_source' => $agent_type])
+        ->one();
+        if ($targetAcct) {
+            $warning = "Revoke {$targetAcct->from_source} from user <ID: {$user_id}>?";
+            if ($this->confirm(Console::ansiFormat($warning, [Console::FG_RED]), false)) {
+                if ($targetAcct->delete()) {
+                    $this->stdout("Agent revoked." . PHP_EOL, Console::FG_GREEN);
+                    return self::EXIT_CODE_NORMAL;
+                } else {
+                    $this->stderr("No agent revoked, please try again." . PHP_EOL, console::FG_RED);
+                    return self::EXIT_CODE_ERROR;
+                }
+            } else {
+                $this->stdout("User canceled." . PHP_EOL, Console::FG_GREEN);
+                return self::EXIT_CODE_NORMAL;
+            }
+        } else {
+            $this->stdout('No agent account found.' . PHP_EOL, Console::FG_GREEN);
+            return self::EXIT_CODE_NORMAL;
+        }
+    }
 }
 
