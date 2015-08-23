@@ -32,7 +32,9 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
                     'password_hash',
                     [
                         'attribute' => 'status',
-                        'value' => $model->user->availableStatus()[$model->user->status]
+                        'value' => isset($model->user->availableStatus()[$model->user->status])
+                            ? $model->user->availableStatus()[$model->user->status]
+                            : $model->user->status,
                     ],
                     'created_at',
                     'updated_at',
