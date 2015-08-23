@@ -126,6 +126,30 @@ class UserCommand extends Controller
 
         return $isSucceeded ? self::EXIT_CODE_NORMAL : self::EXIT_CODE_ERROR;
     }
+
+    /**
+     * List agent accounts granted to a user by user id.
+     * @param int $user_id
+     */
+    public function actionListAgents($user_id)
+    {
+        $superAgentAcct = Yii::createObject($this->agentAcctModelClass);
+        $accts = $superAgentAcct::find()
+        ->asArray()
+        ->select(['from_source'])
+        ->where([
+            'user_id' => $user_id,
+            'from_source' => array_keys($superAgentAcct::availableSources()),
+        ])
+        ->column();
+        $this->stdout("Agent accounts granted to user <ID: {$user_id}>:\n\t");
+        if (empty($accts)) {
+            $this->stdout('No agent accounts found.' . PHP_EOL, Console::FG_YELLOW);
+        } else {
+            $this->stdout(implode("\n\t", $accts) . PHP_EOL . PHP_EOL);
+        }
+
+        return self::EXIT_CODE_NORMAL;
+    }
 }
 
-?>
