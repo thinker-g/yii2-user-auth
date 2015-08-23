@@ -75,7 +75,7 @@ trait SuperAgentAccountSearch
         $query->andFilterWhere([
             self::tableName() . '.id' => $this->id,
             'user_id' => $this->user_id,
-            'from_source' => $this->from_source ? $this->from_source : array_keys($this->availableSources()),
+            'from_source' => $this->from_source ? $this->from_source : $this->availableSources(),
         ]);
 
         $query->andFilterWhere(['like', User::tableName() . '.username', $this->username])

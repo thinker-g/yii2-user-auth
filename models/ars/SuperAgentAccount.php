@@ -51,10 +51,10 @@ class SuperAgentAccount extends UserExtAccount
      */
     public static function availableSources()
     {
-        return [
-            'super_admin' => 'Super Admin',
-            'super_agent' => 'Super Agent',
-        ];
+        return array_combine($values = [
+            'super_admin',
+            'super_agent',
+        ], $values);
     }
 
     /**

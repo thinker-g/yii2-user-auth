@@ -23,7 +23,7 @@ class SuperAgentController extends BaseAdminController
         }
         $model = $modelClass::findOne([
             $modelClass::primaryKey()[0] => $id,
-            'from_source' => array_keys($modelClass::availableSources())
+            'from_source' => $modelClass::availableSources()
         ]);
         if (!is_null($model)) {
             return $model;

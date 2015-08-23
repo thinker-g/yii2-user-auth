@@ -139,7 +139,7 @@ class UserCommand extends Controller
         ->select(['from_source'])
         ->where([
             'user_id' => $user_id,
-            'from_source' => array_keys($superAgentAcct::availableSources()),
+            'from_source' => $superAgentAcct::availableSources(),
         ])
         ->column();
         $this->stdout("Agent accounts granted to user <ID: {$user_id}>:\n\t");
