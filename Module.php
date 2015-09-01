@@ -1,4 +1,12 @@
 <?php
+/**
+ * @link https://github.com/thinker-g/yii2-user-auth
+ * @copyright Copyright (c) Thinker_g
+ * @license MIT
+ * @version v0.0.1
+ * @author Thinker_g
+ * @since v0.0.1
+ */
 namespace thinker_g\UserAuth;
 
 use thinker_g\Helpers\traits\NSedModuleViewPath;
@@ -144,4 +152,12 @@ class Module extends \yii\base\Module
         return $continue;
     }
 
+    /**
+     * Get current version of the module.
+     * @return string
+     */
+    public function getVersion()
+    {
+        return 'v0.0.1';
+    }
 }
