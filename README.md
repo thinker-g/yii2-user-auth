@@ -48,19 +48,6 @@ return [
                 'reset-password' => ['model' => 'thinker_g\UserAuth\models\forms\ResetPasswordForm'],
             ]
         ],
-        'modelSignupForm' => [
-            'class' => 'thinker_g\UserAuth\models\forms\SignupForm',
-            'reservedUsernames' => [
-                'admin',
-                'manager',
-            ],
-            'reservedEmails' => [
-                'noreply@sample.com',
-                'robot@sample.com',
-                'support@sample.com',
-                'webmaster@sample.com'
-            ],
-        ]
     ], // end - user
     // ...
 ];

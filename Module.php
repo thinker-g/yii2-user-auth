@@ -60,27 +60,6 @@ class Module extends \yii\base\Module
     public $controllerNamespace = 'thinker_g\UserAuth\controllers\front';
 
     /**
-     * Signup form model configuration.
-     * Used in frontend.
-     * @var string|array
-     */
-    public $modelSignupForm = 'thinker_g\UserAuth\models\forms\SignupForm';
-
-    /**
-     * Password reset request form configuration.
-     * The user's email is required by this model. System will send a password reset email to the user.
-     * @var string|array
-     */
-    public $modelPasswordResetRequestForm = 'thinker_g\UserAuth\models\forms\PasswordResetRequestForm';
-
-    /**
-     * Reset password form configuration.
-     * User needs to input a new password into this form.
-     * @var string|array
-     */
-    public $modelResetPasswordForm = 'thinker_g\UserAuth\models\forms\ResetPasswordForm';
-
-    /**
      * Roles allowed to access the module.
      * @var unknown
      */
