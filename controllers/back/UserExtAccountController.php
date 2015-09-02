@@ -17,4 +17,10 @@ use thinker_g\UserAuth\controllers\BaseAdminController;
  */
 class UserExtAccountController extends BaseAdminController
 {
+    public $controllerMvMap = [
+        [
+            'model' => 'thinker_g\UserAuth\models\ars\UserExtAccount',
+            'search' => 'thinker_g\UserAuth\models\ars\UserExtAccountSearch',
+        ],
+    ];
 }

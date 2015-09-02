@@ -23,9 +23,12 @@ use Yii;
 class DefaultController extends BaseDefaultController
 {
     public $moduleMvMapAttr = 'backMvMap';
+    public $controllerMvMap = [
+        ['model' => 'thinker_g\UserAuth\models\ars\User'],
+    ];
     public function actionIndex()
     {
-        $modelClassName = self::classNameFromConf($this->getActionMvMap()['model']);
+        $modelClassName = self::classNameFromConf($this->getModelClass());
         $reflection = new \ReflectionClass($modelClassName);
         if ($reflection->hasMethod('getStatsByStatus')) {
             $stats = $modelClassName::getStatsByStatus();

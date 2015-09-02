@@ -69,56 +69,13 @@ class Module extends \yii\base\Module
      * View map for frontend controllers.
      * @var array
      */
-    public $mvMap = [
-        'auth' => [
-            'login' => ['model' => 'thinker_g\UserAuth\models\forms\LoginForm'],
-            'signup' => ['model' => 'thinker_g\UserAuth\models\forms\SignupForm'],
-            'request-password-reset' => ['model' => 'thinker_g\UserAuth\models\forms\PasswordResetRequestForm'],
-            'reset-password' => ['model' => 'thinker_g\UserAuth\models\forms\ResetPasswordForm'],
-        ]
-    ];
+    public $mvMap = [];
 
     /**
      * View map for backend controllers.
-     * @var unknown
+     * @var array
      */
-    public $backMvMap = [
-        'default' => [
-            ['model' => 'thinker_g\UserAuth\models\ars\User'],
-        ],
-        'auth' => [
-            'login' => ['model' => 'thinker_g\UserAuth\models\forms\LoginForm'],
-            'request-password-reset' => ['view' => 'requestPasswordResetToken'],
-            'reset-password' => ['view' => 'resetPassword'],
-        ],
-        'user' => [
-            [
-                'model' => 'thinker_g\UserAuth\models\ars\User',
-                'search' => 'thinker_g\UserAuth\models\ars\UserSearch',
-            ],
-            'who-am-i' => [
-                'view' => 'view',
-            ]
-        ],
-        'user-ext-account' => [
-            [
-                'model' => 'thinker_g\UserAuth\models\ars\UserExtAccount',
-                'search' => 'thinker_g\UserAuth\models\ars\UserExtAccountSearch',
-            ]
-        ],
-        'user-info' => [
-            [
-                'model' => 'thinker_g\UserAuth\models\ars\UserInfo',
-                'search' => 'thinker_g\UserAuth\models\ars\UserInfoSearch',
-            ]
-        ],
-        'super-agent' => [
-            [
-                'model' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
-                'search' => 'thinker_g\UserAuth\models\ars\SuperAgentAccountSearch',
-            ]
-        ],
-    ];
+    public $backMvMap = [];
 
     /**
      * @inheritdoc

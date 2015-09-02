@@ -17,4 +17,10 @@ use thinker_g\UserAuth\controllers\BaseAdminController;
  */
 class UserInfoController extends BaseAdminController
 {
+    public $controllerMvMap = [
+        [
+            'model' => 'thinker_g\UserAuth\models\ars\UserInfo',
+            'search' => 'thinker_g\UserAuth\models\ars\UserInfoSearch',
+        ],
+    ];
 }

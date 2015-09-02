@@ -19,6 +19,13 @@ use yii\web\NotFoundHttpException;
 class SuperAgentController extends BaseAdminController
 {
 
+    public $controllerMvMap = [
+        [
+            'model' => 'thinker_g\UserAuth\models\ars\SuperAgentAccount',
+            'search' => 'thinker_g\UserAuth\models\ars\SuperAgentAccountSearch',
+        ]
+    ];
+
     /**
      * Finds the UserExtAccount model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.

@@ -18,6 +18,13 @@ use yii\web\ForbiddenHttpException;
  */
 class UserController extends BaseAdminController
 {
+    public $controllerMvMap = [
+        [
+            'model' => 'thinker_g\UserAuth\models\ars\User',
+            'search' => 'thinker_g\UserAuth\models\ars\UserSearch',
+        ],
+        'who-am-i' => ['view' => 'view'],
+    ];
     public function actionWhoAmI()
     {
         if (is_null($_GET['id'] = \Yii::$app->getUser()->id)) {
