@@ -294,7 +294,7 @@ class User extends ActiveRecord implements IdentityInterface, Authenticatable, P
         $expire = self::$passwordResetTokenExpire;
         $parts = explode('_', $token);
         $timestamp = (int) end($parts);
-        return $timestamp + $expire >= time();
+        return $timestamp + $expire <= time();
     }
 
     /**
