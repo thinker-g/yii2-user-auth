@@ -22,7 +22,6 @@ use Yii;
  */
 class DefaultController extends BaseDefaultController
 {
-    public $moduleMvMapAttr = 'backMvMap';
     public $controllerMvMap = [
         ['model' => 'thinker_g\UserAuth\models\ars\User'],
     ];

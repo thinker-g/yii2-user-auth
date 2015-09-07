@@ -11,7 +11,6 @@
 namespace thinker_g\UserAuth\controllers;
 
 use Yii;
-use thinker_g\Helpers\controllers\ModelViewController;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
@@ -20,7 +19,7 @@ use yii\filters\AccessControl;
  * @author Thinker_g
  * @property \thinker_g\UserAuth\Module $module
  */
-abstract class BaseAuthController extends ModelViewController
+abstract class BaseAuthController extends BaseDefaultController
 {
     /**
      * @inheritdoc
@@ -35,12 +34,6 @@ abstract class BaseAuthController extends ModelViewController
     public $controllerMvMap = [
         'login' => ['model' => 'thinker_g\UserAuth\models\forms\LoginForm'],
     ];
-
-    /**
-     * @inheritdoc
-     * @var string
-     */
-    public $moduleMvMapAttr = 'mvMap';
 
     /**
      * @inheritdoc
