@@ -39,7 +39,6 @@ abstract class BaseDefaultController extends ModelViewController
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index'],
                         'roles' => $this->module->roles,
                     ],
                 ],
