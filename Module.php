@@ -72,12 +72,6 @@ class Module extends \yii\base\Module
     public $mvMap = [];
 
     /**
-     * View map for backend controllers.
-     * @var array
-     */
-    public $backMvMap = [];
-
-    /**
      * @inheritdoc
      * @see \yii\base\Module::beforeAction()
      */
