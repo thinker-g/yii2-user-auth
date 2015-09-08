@@ -23,31 +23,28 @@ use thinker_g\UserAuth\models\ars\User;
 class UserCommand extends Controller
 {
     /**
-     * User model configuration.
-     * @var string|array
+     * @var string|array User model configuration.
      */
     public $userModel = 'thinker_g\UserAuth\models\ars\User';
     /**
-     * Super agent account model configuration.
-     * @var unknown
+     * @var string Super agent account model configuration.
      */
     public $agentAcctModelClass = 'thinker_g\UserAuth\models\ars\SuperAgentAccount';
 
     /**
-     * Status of the user, default to "alive" status.
-     * @var string
+     * @var string Status of the user
+     * Default to "alive".
      */
     public $status = User::STATUS_ALIVE;
 
     /**
-     * Primary email of the user.
-     * @var string
+     *
+     * @var string Primary email of the user.
      */
     public $email;
 
     /**
-     * Agent account type while granting super agent account.
-     * @var string
+     * @var string Agent account type while granting super agent account.
      */
     public $agent_type = 'super_admin';
 

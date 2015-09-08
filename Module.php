@@ -32,15 +32,15 @@ class Module extends \yii\base\Module
     use NSedModuleViewPath;
 
     /**
-     * Module name.
-     * @var string
+     * @var string Module name.
      */
     public $name = "User Manager";
 
     /**
-     * Sidebar menu items, view must invoke this attribute to generate navigation items on page.
+     * @var array Sidebar menu items.
+     * This will be added to the view's [[params]] attributes indexed by key 'sidebarMenu'.
+     * Views can invoke that to generate navigation items on page.
      * Default configuration is for backend management console.
-     * @var array
      */
     public $sidebarMenu = [
         ['label' => 'Splash page', 'url'=>['default/index']],
@@ -53,21 +53,19 @@ class Module extends \yii\base\Module
     ];
 
     /**
-     * Set it to "thinker_g\UserAuth\backcontrollers" while enabling backend console.
      * @inheritdoc
-     * @var string
+     * @var string 
+     * Set it to "thinker_g\UserAuth\controllers\back" while using backend console
      */
     public $controllerNamespace = 'thinker_g\UserAuth\controllers\front';
 
     /**
-     * Roles allowed to access the module.
-     * @var unknown
+     * @var array Roles allowed to access the module.
      */
     public $roles = ['@'];
 
     /**
-     * View map for frontend controllers.
-     * @var array
+     * @var array View map for frontend controllers.
      */
     public $mvMap = [];
 

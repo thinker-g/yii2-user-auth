@@ -21,9 +21,8 @@ use Yii;
 class CredentialForm extends Model
 {
     /**
-     * Class name (configuration array) of the user credential model of the form.
+     * @var string The class name (configuration array) of the user credential model of the form.
      * If set to 'null', the [[identityClass]] of 'user' component of the application will be used.
-     * @var string
      */
     public $credentialModelClass;
 

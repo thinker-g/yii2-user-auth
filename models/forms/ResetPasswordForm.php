@@ -25,7 +25,8 @@ class ResetPasswordForm extends CredentialForm
     public $token;
 
     /**
-     * @var \common\models\User
+     * @var unknown
+     * The type of this variable is determined by the configration in [[CredentialForm::credentialModelClass]].
      */
     private $_user;
 

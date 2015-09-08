@@ -24,7 +24,7 @@ class LoginForm extends CredentialForm
 {
 
     /**
-     * Validator method name used by password.
+     * @var string|array Validator method name used by password validation.
      * Two available built-in validators:
      * 1. `validatePrimaryPassword`: The default validtor, reads password hash from the "user" model.
      * 2. `validateAgentPassword`: Will use corresponding "user_ext_account" and read password hash from its
@@ -39,26 +39,28 @@ class LoginForm extends CredentialForm
      *        ]
      *    ]
      *    ~~~
-     *
-     * @var string|array
      */
     public $passwordValidator = 'validatePrimaryPassword';
 
+    /**
+     * @var string Username provided by browser.
+     */
     public $username;
 
+    /**
+     * @var string Password provided by browser.
+     */
     public $password;
 
     /**
-     * Whether to keep current user logged in.
+     * @var bool Whether to keep current user logged in.
      * See option [[autoLoginDuration]] for the duration.
-     * @var bool
      */
     public $rememberMe = true;
 
     /**
-     * How long, in seconds, to keep current user logged in.
+     * @var int How long, in seconds, to keep current user logged in.
      * Default to 7 days. This parameter will only be read when [[rememberMe]] is true.
-     * @var int
      */
     public $rememberMeDuration = 604800;
 

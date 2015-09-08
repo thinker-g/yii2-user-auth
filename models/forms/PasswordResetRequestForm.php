@@ -20,10 +20,9 @@ use thinker_g\UserAuth\models\ars\User;
 class PasswordResetRequestForm extends CredentialForm
 {
     /**
-     * View id of password reset mail.
+     * @var array View id of password reset mail.
      * This should be an associated array indexed by 'html' and 'text' for different type of emails sent by 'mailer' component.
      * This will be passed into the 1st parameter of [[\yii\mail\MailerInterface::compose()]].
-     * @var array
      */
     public $mailerView = [
         'html' => 'passwordResetToken-html',
@@ -31,19 +30,20 @@ class PasswordResetRequestForm extends CredentialForm
     ];
 
     /**
-     * The from information of password reset email.
+     * @var array The from information of password reset email.
      * This should be an array whose key is the from email address and value is the from name.
      * This will be passed into the parameter of [[\yii\mail\MailerInterface::setFrom()]].
-     * @var array
      */
     public $mailerFrom = ['noreply@example.com' => 'Support Service'];
     /**
-     * The subject of the password reset email.
+     * @var string The subject of the password reset email.
      * This will be passed into the parameter of [[\yii\mail\MailerInterface::setSubject()]].
-     * @var string
      */
     public $mailerSubject = 'Reset Account Password';
 
+    /**
+     * @var string Email address submitted.
+     */
     public $email;
 
     /**
