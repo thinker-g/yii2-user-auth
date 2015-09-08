@@ -39,6 +39,10 @@ class AuthController extends BaseAuthController
      */
     public function actionSignup()
     {
+        if (!\Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = Yii::createObject($this->getModelClass());
         if ($model->load(Yii::$app->request->post())) {
             if ($user = $model->signup()) {
