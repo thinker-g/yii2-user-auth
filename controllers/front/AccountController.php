@@ -21,6 +21,8 @@ class AccountController extends BaseAdminController
 {
     public $defaultAction = 'view';
 
+    public $moduleMvMapAttr = 'mvMap';
+
     /**
      * @inheritdoc
      * @see \thinker_g\Helpers\controllers\CrudController::actionUpdate()
@@ -36,15 +38,9 @@ class AccountController extends BaseAdminController
      */
     public function actionView()
     {
-        // TODO Auto-generated method stub
+        return $this->render($this->viewID, [
+            'model' => \Yii::$app->getUser()->getIdentity()
+        ]);
     }
 
-    /**
-     * @inheritdoc
-     * @see \thinker_g\Helpers\controllers\CrudController::getRequestedPk()
-     */
-    public static function getRequestedPk($classConf)
-    {
-        // TODO Auto-generated method stub
-    }
 }
