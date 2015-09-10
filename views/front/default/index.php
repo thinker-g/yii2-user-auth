@@ -8,4 +8,5 @@ $this->title = Yii::t('app', 'User Manager');
     <p>
         This is the splash page of your system's <span class="label label-info"><?= $this->context->module->name ?></span> module.
     </p>
+    <p>Go to <?= Html::a('View My Account', ['account/view']) ?></p>
 </div>
