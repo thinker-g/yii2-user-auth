@@ -11,6 +11,7 @@
 namespace thinker_g\UserAuth\controllers\front;
 
 use thinker_g\UserAuth\controllers\BaseAdminController;
+use yii\helpers\ArrayHelper;
 
 /**
  * Default frontend controller.
@@ -25,22 +26,27 @@ class AccountController extends BaseAdminController
 
     /**
      * @inheritdoc
-     * @see \thinker_g\Helpers\controllers\CrudController::actionUpdate()
+     * @see \thinker_g\UserAuth\controllers\BaseAdminController::behaviors()
      */
-    public function actionUpdate()
+    public function behaviors()
     {
-        // TODO Auto-generated method stub
+        return ArrayHelper::merge(parent::behaviors(), [
+            'actionBlocker' => [
+                'class' => 'thinker_g\Helpers\behaviors\ActionBlocker',
+                'only' => ['index', 'create', 'delete'],
+                'exception' => 'yii\web\NotFoundHttpException',
+                'exceptionParams' => ['Page not found.'],
+            ]
+        ]);
     }
 
     /**
      * @inheritdoc
-     * @see \thinker_g\Helpers\controllers\CrudController::actionView()
+     * @see \thinker_g\Helpers\controllers\CrudController::findModel()
      */
-    public function actionView()
+    protected function findModel($condition = null, $actionID = null, $contextMap = null)
     {
-        return $this->render($this->viewID, [
-            'model' => \Yii::$app->getUser()->getIdentity()
-        ]);
+        return \Yii::$app->getUser()->getIdentity();
     }
 
 }
