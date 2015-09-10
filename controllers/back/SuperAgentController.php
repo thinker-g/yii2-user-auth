@@ -29,18 +29,17 @@ class SuperAgentController extends BaseAdminController
     /**
      * Finds the UserExtAccount model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param integer $id
+     * @param string|array $condition this will always be overridden by primary key and available agent types.
      * @return User the loaded model
      */
-    protected function findModel($id)
+    protected function findModel($condition = null, $actionID = null, $contextMap = null)
     {
-        if (is_array($modelClass = $this->getModelClass(static::KEY_MODEL))) {
-            $modelClass = $modelClass['class'];
-        }
-        $model = $modelClass::findOne([
-            $modelClass::primaryKey()[0] => $id,
+        $condition = static::getRequestedPk($this->getModelClass());
+        $model = parent::findModel($condition, $actionID, $contextMap);
+        /* $model = $modelClass::findOne([
+            $modelClass::primaryKey()[0] => $condition,
             'from_source' => $modelClass::availableSources()
-        ]);
+        ]); */
         if (!is_null($model)) {
             return $model;
         } else {
