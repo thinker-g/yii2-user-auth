@@ -12,8 +12,9 @@ php composer.phar require thinker-g/yii2-helpers
 1. Please setup `[[identityClass]]` of your "*user*" component to `thinker_g\UserAuth\models\ars\User` so the backend of this module can manage users.
 2. Setup `[[loginUrl]]` of your "*user*" component to `['user-auth/auth/login]`, to allow the framework redirect users to the module's login page when login is needed, where the `user-auth` is the id you gave to this module in your application.
 
-# Some configuration example
+# Minimal installation
 ## console
+`console/config/main.php`
 Used for creating the very first "super user", and grant super-agent accounts.
 
 ```php
@@ -31,51 +32,45 @@ return [
 ```
 
 ## frontend
-
+`frontend/config/main.php`
 ```php
 
 return [
     // ...
-    // begin - user
-    'user' => [
-        'class' => 'thinker_g\UserAuth\Module',
-        'roles' => null,
-        'mvMap' => [
-            'auth' => [
-                'login' => ['model' => 'thinker_g\UserAuth\models\forms\LoginForm'],
-                'signup' => ['model' => 'thinker_g\UserAuth\models\forms\SignupForm'],
-                'request-password-reset' => ['model' => 'thinker_g\UserAuth\models\forms\PasswordResetRequestForm'],
-                'reset-password' => ['model' => 'thinker_g\UserAuth\models\forms\ResetPasswordForm'],
-            ]
-        ],
-    ], // end - user
+    'modules' => [
+        // begin - user
+        'user' => 'thinker_g\UserAuth\Module',
+        // ...
+    ], // End of modules
     // ...
 ];
 
 ```
 
 ## backend
+`backend/config/main.php`
 ```php
 return [
     // ...
-    // begin - user
-    'user' => [
-        'class' => 'thinker_g\UserAuth\Module',
-        'controllerNamespace' => 'thinker_g\UserAuth\controllers\back',
-        'layout' => '@vendor/thinker-g/yii2-helpers/views/bs3/layouts/lsidebarmenu',
-        'backMvMap' => [
-            'auth' => [
-                'login' => [
-                    'model' => [
-                        'class' => 'thinker_g\UserAuth\models\forms\LoginForm',
-                        'passwordValidator' => ['validateAgentPassword'],
-                        'rememberMe' => false,
+    'modules' => [
+        // begin - user
+        'user' => [
+            'class' => 'thinker_g\UserAuth\Module',
+            'controllerNamespace' => 'thinker_g\UserAuth\controllers\back',
+            'layout' => '@vendor/thinker-g/yii2-helpers/views/bs3/layouts/lsidebarmenu',
+            'mvMap' => [
+                'auth' => [
+                    'login' => [
+                        'model' => [
+                            'class' => 'thinker_g\UserAuth\models\forms\LoginForm',
+                            'passwordValidator' => ['validateAgentPassword'],
+                            'rememberMe' => false,
+                        ],
                     ],
                 ],
-                'request-password-reset' => ['view' => 'requestPasswordResetToken'],
-                'reset-password' => ['view' => 'resetPassword'],
-            ], 
-    ], // end - user
+        ], // end - user
+        // ...
+    ], // End of modules
     // ...
 ];
 
