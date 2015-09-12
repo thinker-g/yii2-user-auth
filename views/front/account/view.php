@@ -24,7 +24,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="panel panel-default">
         <div class="panel-heading">
             <span class="btn-group">
-                <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
+                <?= Html::a(Yii::t('app', 'Logout'), ['auth/logout', 'id' => $model->id], [
+                    'class' => 'btn btn-default',
+                    'data' => [
+                        'method' => 'post',
+                        'confirm' => \Yii::t('app', 'Are you sure you want to logout?'),
+                    ]
+                ]) ?>
             </span>
         </div><!-- $.panel-heading -->
         <?= DetailView::widget([
