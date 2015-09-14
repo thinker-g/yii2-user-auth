@@ -89,6 +89,7 @@ class User extends ActiveRecord implements IdentityInterface, Authenticatable, P
      */
     public function rules()
     {
+        //@todo need to add a validate to ensure at least one of username or primary_email has a value.
         return [
             [['username', 'primary_email'], 'unique'],
             [['username', 'primary_email'], 'trim'],

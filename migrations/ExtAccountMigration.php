@@ -19,6 +19,7 @@ use thinker_g\Helpers\migrations\CreationMigration;
  */
 class ExtAccountMigration extends CreationMigration
 {
+    //@todo ext_user_id should be changed to string.
     public $tables = [
         '{{%user_ext_account}}' => [
             self::K_COLS => [

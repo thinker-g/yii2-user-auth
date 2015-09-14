@@ -22,33 +22,38 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="panel panel-default">
-        <div class="panel-heading">
+        <?= DetailView::widget([
+            'options' => [
+                'class' => 'table table-striped table-condensed detail-view',
+            ],
+            'model' => $model,
+            'attributes' => [
+                'id',
+                'username',
+                'primary_email:email',
+                [
+                    'attribute' => 'status',
+                    'value' => isset($model::availableStatus()[$model->status]) ? $model::availableStatus()[$model->status] : $model->status,
+                ],
+                [
+                    'attribute' => 'created_at',
+                    'label' => 'Registered',
+                ],
+                'last_login_at',
+            ],
+        ]) ?>
+        <div class="panel-footer">
             <span class="btn-group">
-                <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-default']) ?>
+                <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
                 <?= Html::a(Yii::t('app', 'Logout'), ['auth/logout', 'id' => $model->id], [
-                    'class' => 'btn btn-default',
+                    'class' => 'btn btn-primary',
                     'data' => [
                         'method' => 'post',
                         'confirm' => \Yii::t('app', 'Are you sure you want to logout?'),
                     ]
                 ]) ?>
             </span>
-        </div><!-- $.panel-heading -->
-        <?= DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                'id',
-                'username',
-                'primary_email:email',
-                'password_hash',
-                'status',
-                'auth_key',
-                'password_reset_token',
-                'created_at',
-                'updated_at',
-                'last_login_at',
-            ],
-        ]) ?>
+        </div><!-- $.panel-footer -->
     </div><!-- $.pandel.panel-default -->
 
     <?php if ($model->hasProperty('userInfo')): // Display user info if defined. ?>

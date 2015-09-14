@@ -39,12 +39,6 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
         ?>
         <?= $statusField->dropDownList($model->availableStatus()) ?>
     
-        <?= $form->field($model, 'created_at')->textInput() ?>
-    
-        <?= $form->field($model, 'updated_at')->textInput() ?>
-    
-        <?= $form->field($model, 'last_login_at')->textInput() ?>
-    
         <div class="form-group">
             <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
         </div>
