@@ -9,12 +9,11 @@ use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model thinker_g\UserAuth\models\ars\User */
 
-$this->title = "User [{$model->id}]: $model->primary_email";
+$this->title = "My Account";
 $this->params['breadcrumbs'][] = [
     'label' => Yii::t('app', $this->context->module->name),
     'url' => ['/' . $this->context->module->uniqueId]
 ];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-view">
@@ -44,8 +43,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
         <div class="panel-footer">
             <span class="btn-group">
-                <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-                <?= Html::a(Yii::t('app', 'Logout'), ['auth/logout', 'id' => $model->id], [
+                <?= Html::a(Yii::t('app', 'Update'), ['update'], ['class' => 'btn btn-primary']) ?>
+                <?= Html::a(Yii::t('app', 'Logout'), ['auth/logout'], [
                     'class' => 'btn btn-primary',
                     'data' => [
                         'method' => 'post',

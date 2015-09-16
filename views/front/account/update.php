@@ -14,9 +14,8 @@ $this->params['breadcrumbs'][] = [
     'label' => Yii::t('app', $this->context->module->name),
     'url' => ['/' . $this->context->module->uniqueId]
 ];
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Users'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
-$this->params['breadcrumbs'][] = Yii::t('app', 'Update');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Account'), 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = Yii::t('app', 'Edit');
 ?>
 <div class="user-update">
 
