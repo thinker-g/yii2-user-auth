@@ -10,6 +10,9 @@
 namespace thinker_g\UserAuth;
 
 use thinker_g\Helpers\traits\NSedModuleViewPath;
+use yii\di\Instance;
+use yii\base\NotSupportedException;
+use Yii;
 
 /**
  * User management module.
@@ -54,7 +57,7 @@ class Module extends \yii\base\Module
 
     /**
      * @inheritdoc
-     * @var string 
+     * @var string
      * Set it to "thinker_g\UserAuth\controllers\back" while using backend console
      */
     public $controllerNamespace = 'thinker_g\UserAuth\controllers\front';
@@ -68,6 +71,19 @@ class Module extends \yii\base\Module
      * @var array View map for frontend controllers.
      */
     public $mvMap = [];
+
+    /**
+     * @var array Oauth adaptor configuration array, indexed by from_source.
+     * @example
+     * [
+     *     'linkedin' => [
+     *         'class' => 'thinker_g\UserAuth\oauthAdaptors\
+     *     ]
+     * ]
+     */
+    public $oauthAdaptors = [];
+
+    private $_oauthAdaptors = [];
 
     /**
      * @inheritdoc
@@ -87,5 +103,23 @@ class Module extends \yii\base\Module
     public function getVersion()
     {
         return 'v0.0.1';
+    }
+
+    /**
+     *
+     * @param string $adaptorId
+     */
+    public function getOauthAdaptor($adaptorId, $refresh = false)
+    {
+        if (!array_key_exists($adaptorId, $this->oauthAdaptors)) {
+            return null;
+        } elseif ($refresh || !array_key_exists($adaptorId, $this->_oauthAdaptors)) {
+            $adaptor = Yii::createObject($this->oauthAdaptors[$adaptorId]);
+            if (!Instance::ensure($adaptor, 'thinker_g\UserAuth\Interfaces\OauthAdaptor')) {
+                throw new NotSupportedException("Adaptor must implement interface \thinker_g\UserAuth\Interfaces\OauthAdaptor");
+            }
+            $this->_oauthAdaptors[$adaptorId] = $adaptor;
+        }
+        return $this->_oauthAdaptors[$adaptorId];
     }
 }
