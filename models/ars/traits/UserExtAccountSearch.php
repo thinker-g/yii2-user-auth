@@ -29,8 +29,9 @@ trait UserExtAccountSearch
     public function rules()
     {
         return [
-            [['id', 'user_id', 'ext_user_id'], 'integer'],
+            [['id', 'user_id'], 'integer'],
             [[
+                'open_uid',
                 'username',
                 'primary_email',
                 'from_source',
@@ -94,7 +95,7 @@ trait UserExtAccountSearch
         $query->andFilterWhere([
             self::tableName() . '.id' => $this->id,
             'user_id' => $this->user_id,
-            'ext_user_id' => $this->ext_user_id,
+            'open_uid' => $this->open_uid,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'from_source' => $this->from_source ? $this->form_source : array_keys($this->availableSources()),

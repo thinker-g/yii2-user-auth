@@ -19,7 +19,7 @@ use Yii;
  * @property integer $user_id
  * @property string $from_source
  * @property string $access_token
- * @property integer $ext_user_id
+ * @property string $open_uid
  * @property string $email
  * @property string $created_at
  * @property string $updated_at

@@ -28,8 +28,9 @@ trait SuperAgentAccountSearch
     public function rules()
     {
         return [
-            [['id', 'user_id', 'ext_user_id'], 'integer'],
+            [['id', 'user_id'], 'integer'],
             [[
+                'open_uid',
                 'username',
                 'primary_email',
                 'access_token',

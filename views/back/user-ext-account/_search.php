@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'access_token') ?>
 
-    <?= $form->field($model, 'ext_user_id') ?>
+    <?= $form->field($model, 'open_uid') ?>
 
     <?php // echo $form->field($model, 'email') ?>
 

@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'access_token')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'ext_user_id')->textInput() ?>
+    <?= $form->field($model, 'open_uid')->textInput() ?>
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 

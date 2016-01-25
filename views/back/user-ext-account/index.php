@@ -45,7 +45,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'from_source',
             'access_token',
-            // 'ext_user_id',
+            // 'open_uid',
             // 'email:email',
             // 'created_at',
             // 'updated_at',
