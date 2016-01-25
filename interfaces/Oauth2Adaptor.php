@@ -2,7 +2,7 @@
 namespace thinker_g\UserAuth\interfaces;
 use yii\web\Controller;
 
-interface OauthAdaptor
+interface Oauth2Adaptor
 {
     /**
      * Get ID of third-party application, client ID in OAuth2.0.

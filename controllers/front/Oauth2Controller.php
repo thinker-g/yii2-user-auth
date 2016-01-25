@@ -22,7 +22,7 @@ use yii\helpers\Html;
  *
  * @author Thinker_g
  */
-class OauthController extends BaseAuthController
+class Oauth2Controller extends BaseAuthController
 {
 
     /**
