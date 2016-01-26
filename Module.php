@@ -115,7 +115,7 @@ class Module extends \yii\base\Module
             return null;
         } elseif ($refresh || !array_key_exists($adaptorId, $this->_oauthAdaptors)) {
             $adaptor = Yii::createObject($this->oauthAdaptors[$adaptorId]);
-            if (!Instance::ensure($adaptor, 'thinker_g\UserAuth\Interfaces\OauthAdaptor')) {
+            if (!Instance::ensure($adaptor, 'thinker_g\UserAuth\Interfaces\Oauth2Adaptor')) {
                 throw new NotSupportedException("Adaptor must implement interface \thinker_g\UserAuth\Interfaces\OauthAdaptor");
             }
             $this->_oauthAdaptors[$adaptorId] = $adaptor;

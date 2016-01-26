@@ -1,5 +1,5 @@
 <?php
-namespace thinker_g\UserAuth\adaptors;
+namespace thinker_g\UserAuth\oauth2Adaptors;
 
 use thinker_g\UserAuth\interfaces\Oauth2Adaptor;
 use yii\base\Component;
@@ -40,7 +40,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         }
         $accessToken = $this->getAccessToken(null, $controller);
         $searchCond = [
-            'ext_user_id' => $this->getOwnerId($accessToken),
+            'open_uid' => $this->getOwnerId($accessToken),
             'from_source' => 'linkedin',
         ];
         // $extAcct = \thinker_g\UserAuth\models\ars\UserExtAccount::findOne($searchCond);
@@ -55,7 +55,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             $user = Yii::createObject($this->userModel);
             $user->save(false);
             $acctModel = Yii::createObject($this->acctModel);
-            $searchCond['user_id'] = $user->primaryKey;
+            $searchCond['open_uid'] = $user->primaryKey;
             $acctModel->load($searchCond, '');
             var_dump($acctModel->save(false));
         }
