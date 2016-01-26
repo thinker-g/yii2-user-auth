@@ -22,6 +22,14 @@ trait UserExtAccountSearch
 {
     public $username;
     public $primary_email;
+    public static $availableSources = [
+        'facebook' => 'Facebook',
+        'twitter' => 'Twitter',
+        'google_account' => 'Google Account',
+        'sina_weibo' => 'Sina Weibo',
+        'qq' => 'QQ',
+        'linkedin' => 'Linked In',
+    ];
 
     /**
      * @inheritdoc
@@ -98,7 +106,7 @@ trait UserExtAccountSearch
             'open_uid' => $this->open_uid,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'from_source' => $this->from_source ? $this->form_source : array_keys($this->availableSources()),
+            'from_source' => $this->from_source,
         ]);
 
         $query->andFilterWhere(['like', parent::tableName() . '.username', $this->username])

@@ -70,22 +70,6 @@ class UserExtAccount extends \yii\db\ActiveRecord
     }
 
     /**
-     * Available open-auth account sources.
-     *
-     * @return array
-     */
-    public static function availableSources()
-    {
-        return [
-            'facebook' => 'Facebook',
-            'twitter' => 'Twitter',
-            'google_account' => 'Google Account',
-            'sina_weibo' => 'Sina Weibo',
-            'qq' => 'QQ',
-        ];
-    }
-
-    /**
      * @return \yii\db\ActiveQuery
      */
     public function getUser()
