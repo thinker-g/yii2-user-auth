@@ -29,7 +29,7 @@ trait RelationUserExtAccount
     public function getUserExtAccounts()
     {
         return $this->hasMany(UserExtAccount::className(), ['user_id' => 'id'])
-            ->where(['from_source' => array_keys(UserExtAccount::availableSources())]);
+            ->where(['from_source' => array_keys(UserExtAccount::$availableSources)]);
     }
 }
 

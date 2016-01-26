@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'user_id')->textInput($model->user_id ? ['readonly' => 'readonly'] : []) ?>
 
-    <?= $form->field($model, 'from_source')->dropDownList($model->availableSources()) ?>
+    <?= $form->field($model, 'from_source')->dropDownList($model::$availableSources) ?>
 
     <?= $form->field($model, 'access_token')->textInput(['maxlength' => 255]) ?>
 

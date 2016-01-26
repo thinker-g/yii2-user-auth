@@ -38,7 +38,7 @@ class SuperAgentController extends BaseAdminController
         $model = parent::findModel($condition, $actionID, $contextMap);
         /* $model = $modelClass::findOne([
             $modelClass::primaryKey()[0] => $condition,
-            'from_source' => $modelClass::availableSources()
+            'from_source' => $modelClass::$availableSources
         ]); */
         if (!is_null($model)) {
             return $model;

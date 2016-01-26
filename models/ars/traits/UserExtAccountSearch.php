@@ -22,14 +22,6 @@ trait UserExtAccountSearch
 {
     public $username;
     public $primary_email;
-    public static $availableSources = [
-        'facebook' => 'Facebook',
-        'twitter' => 'Twitter',
-        'google_account' => 'Google Account',
-        'sina_weibo' => 'Sina Weibo',
-        'qq' => 'QQ',
-        'linkedin' => 'Linked In',
-    ];
 
     /**
      * @inheritdoc

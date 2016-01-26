@@ -28,6 +28,14 @@ use Yii;
  */
 class UserExtAccount extends \yii\db\ActiveRecord
 {
+    public static $availableSources = [
+        'facebook' => 'Facebook',
+        'twitter' => 'Twitter',
+        'google_account' => 'Google Account',
+        'sina_weibo' => 'Sina Weibo',
+        'qq' => 'QQ',
+        'linkedin' => 'Linked In',
+    ];
 
     /**
      * @inheritdoc
