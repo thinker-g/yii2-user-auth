@@ -10,18 +10,17 @@
 namespace thinker_g\UserAuth\controllers\front;
 
 use Yii;
-use thinker_g\UserAuth\controllers\BaseAuthController;
-use yii\base\InvalidParamException;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Html;
+use thinker_g\Helpers\controllers\ModelViewController;
 
 /**
- * Frontend auth controller, provides in addition the password reset actions.
+ * Frontend oauth controller.
  *
  * @author Thinker_g
  */
-class Oauth2Controller extends BaseAuthController
+class Oauth2Controller extends ModelViewController
 {
 
     /**
@@ -32,17 +31,22 @@ class Oauth2Controller extends BaseAuthController
     {
          parent::init();
          if (empty($this->module->oauthAdaptors)) {
-             throw new NotFoundHttpException('Page not found.');
+             throw new NotFoundHttpException('No OAuth adaptor found.');
          }
     }
 
-    public function actionTryLogin($adaptorId)
+    /**
+     * Display a link points to authorization url
+     * @param string $adaptorId
+     * @return string
+     */
+    public function actionTryAuth($adaptorId)
     {
-        return Html::a('Login from ' . $adaptorId, $this->getAdaptor($adaptorId)->getLoginUrl($this));
+        return Html::a('Authenticate via ' . $adaptorId, $this->getAdaptor($adaptorId)->getAuthUrl($this));
     }
 
     /**
-     * Signup action.
+     * Action returned from authorization url.
      */
     public function actionBack()
     {
@@ -53,6 +57,12 @@ class Oauth2Controller extends BaseAuthController
         $this->getAdaptor($adaptorId)->authBack($this);
     }
 
+    /**
+     * Return Oauth adaptor.
+     * @param string $adaptorId
+     * @throws NotFoundHttpException
+     * @return \thinker_g\UserAuth\interfaces\Oauth2Adaptor
+     */
     public function getAdaptor($adaptorId)
     {
         if ($adaptor = $this->module->getOauthAdaptor($adaptorId)) {

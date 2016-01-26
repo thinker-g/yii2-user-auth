@@ -5,23 +5,11 @@ use yii\web\Controller;
 interface Oauth2Adaptor
 {
     /**
-     * Get ID of third-party application, client ID in OAuth2.0.
-     * @return string Client ID.
-     */
-    public function getClientId();
-
-    /**
-     * Get Secret of 3rd-party application, client secret in OAuth2.0.
-     * @return string Client Secret.
-     */
-    public function getClientSecret();
-
-    /**
      * Get URL of resource server.
      * @param \yii\web\Controller $controller
-     * @return string Login URL of authorization server.
+     * @return string Authentication URL of authorization server.
      */
-    public function getLoginUrl(Controller $controller);
+    public function getAuthUrl(Controller $controller);
 
     /**
      * Method called in the action of callback URL.
@@ -31,11 +19,11 @@ interface Oauth2Adaptor
     public function authBack(Controller $controller);
 
     /**
-     * Get Resource Owner's ID.
+     * Get Resource Owner's open user ID.
      * @param string $accessToken
      * @return string Resource owner ID.
      */
-    public function getOwnerId($accessToken);
+    public function getOpenUid($accessToken);
     /**
      * Fetch resource.
      * @param mixed $resource

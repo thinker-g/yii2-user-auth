@@ -22,9 +22,9 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
 
     /**
      * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getOwnerId()
+     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getOpenUid()
      */
-    public function getOwnerId($accessToken)
+    public function getOpenUid($accessToken)
     {
         return $this->fetchResource('/v1/people/~:(id)', $accessToken)['id'];
     }
@@ -65,31 +65,13 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
     
     /**
      * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getClientId()
+     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getAuthUrl()
      */
-    public function getClientId()
-    {
-        return $this->clientId;
-    }
-
-    /**
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getClientSecret()
-     */
-    public function getClientSecret()
-    {
-        return $this->clientSecret;
-    }
-
-    /**
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getLoginUrl()
-     */
-    public function getLoginUrl(Controller $controller)
+    public function getAuthUrl(Controller $controller)
     {
         $data = [
             'response_type' => 'code',
-            'client_id' => $this->getClientId(),
+            'client_id' => $this->client,
             'redirect_uri' => Yii::$app->urlManager->createAbsoluteUrl([
                 $controller->module->id . '/' . $controller->id . '/back',
                 'from_source' => 'linkedin'

@@ -11,7 +11,6 @@ namespace thinker_g\UserAuth;
 
 use thinker_g\Helpers\traits\NSedModuleViewPath;
 use yii\di\Instance;
-use yii\base\NotSupportedException;
 use Yii;
 
 /**
@@ -83,6 +82,11 @@ class Module extends \yii\base\Module
      */
     public $oauthAdaptors = [];
 
+    /**
+     * The GET url parameter name,
+     * whose value indicates the attribute name that contains the oauth service provider id.
+     * @var string
+     */
     public $oauthAdaptorIdParam = 'from_source';
 
     private $_oauthAdaptors = [];
@@ -108,7 +112,7 @@ class Module extends \yii\base\Module
     }
 
     /**
-     *
+     * Get Oauth adaptor.
      * @param string $adaptorId
      */
     public function getOauthAdaptor($adaptorId, $refresh = false)
@@ -117,9 +121,7 @@ class Module extends \yii\base\Module
             return null;
         } elseif ($refresh || !array_key_exists($adaptorId, $this->_oauthAdaptors)) {
             $adaptor = Yii::createObject($this->oauthAdaptors[$adaptorId]);
-            if (!Instance::ensure($adaptor, 'thinker_g\UserAuth\Interfaces\Oauth2Adaptor')) {
-                throw new NotSupportedException("Adaptor must implement interface \thinker_g\UserAuth\Interfaces\OauthAdaptor");
-            }
+            Instance::ensure($adaptor, 'thinker_g\UserAuth\Interfaces\Oauth2Adaptor');
             $this->_oauthAdaptors[$adaptorId] = $adaptor;
         }
         return $this->_oauthAdaptors[$adaptorId];
