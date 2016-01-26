@@ -3,9 +3,8 @@
  * @link https://github.com/thinker-g/yii2-user-auth
  * @copyright Copyright (c) Thinker_g
  * @license MIT
- * @version v0.0.1
  * @author Thinker_g
- * @since v0.0.1
+ * @since v0.1.0
  */
 
 namespace thinker_g\UserAuth\controllers\front;
@@ -37,7 +36,7 @@ class Oauth2Controller extends BaseAuthController
          }
     }
 
-    public function actionTryAdaptor($adaptorId = null)
+    public function actionTryLogin($adaptorId)
     {
         return Html::a('Login from ' . $adaptorId, $this->getAdaptor($adaptorId)->getLoginUrl($this));
     }
@@ -47,20 +46,22 @@ class Oauth2Controller extends BaseAuthController
      */
     public function actionBack()
     {
-        //TODO: remove this fixed key "from_source"
-        $adaptor = $this->getAdaptor(Yii::$app->request->get('from_source'));
-        $adaptor->authBack($this);
+        $adaptorId = Yii::$app->request->get($this->module->oauthAdaptorIdParam);
+        if (!$adaptorId) {
+            throw new BadRequestHttpException('Illegal operation.');
+        }
+        $this->getAdaptor($adaptorId)->authBack($this);
     }
 
     public function getAdaptor($adaptorId)
     {
-        return $this->module->getOauthAdaptor($adaptorId);
+        if ($adaptor = $this->module->getOauthAdaptor($adaptorId)) {
+            return $adaptor;
+        } else {
+            throw new NotFoundHttpException('Adaptor <' . $adaptorId . '> not found.');
+        }
     }
 
-    public function actionEcho()
-    {
-        var_dump($_GET, $_POST);
-    }
 }
 
 ?>

@@ -55,9 +55,11 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             $user = Yii::createObject($this->userModel);
             $user->save(false);
             $acctModel = Yii::createObject($this->acctModel);
-            $searchCond['open_uid'] = $user->primaryKey;
+            $searchCond['user_id'] = $user->primaryKey;
+            $searchCond['access_token'] = $accessToken;
             $acctModel->load($searchCond, '');
-            var_dump($acctModel->save(false));
+            $acctModel->save(false);
+            var_dump($acctModel->attributes);
         }
     }
     

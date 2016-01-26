@@ -83,6 +83,8 @@ class Module extends \yii\base\Module
      */
     public $oauthAdaptors = [];
 
+    public $oauthAdaptorIdParam = 'from_source';
+
     private $_oauthAdaptors = [];
 
     /**
