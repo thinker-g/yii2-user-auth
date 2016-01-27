@@ -11,6 +11,7 @@
 namespace thinker_g\UserAuth\models\ars;
 
 use Yii;
+use thinker_g\UserAuth\interfaces\Oauth2Account;
 
 /**
  * This is the model class for table "{{%user_ext_account}}".
@@ -26,7 +27,7 @@ use Yii;
  *
  * @property User $user
  */
-class UserExtAccount extends \yii\db\ActiveRecord
+class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
 {
     public static $availableSources = [
         'facebook' => 'Facebook',
@@ -83,5 +84,14 @@ class UserExtAccount extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    /**
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\Oauth2Account::findByOpenUid()
+     */
+    public function findByOpenUid($openUid, $from_source)
+    {
+        return self::findOne(['open_uid' => $openUid, 'from_source' => $from_source]);
     }
 }
