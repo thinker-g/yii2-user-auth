@@ -6,10 +6,10 @@ interface Oauth2Adaptor
 {
     /**
      * Get URL of resource server.
-     * @param \yii\web\Controller $controller
+     * @param string $csrfToken
      * @return string Authentication URL of authorization server.
      */
-    public function getAuthUrl(Controller $controller);
+    public function getAuthUrl($csrfToken);
 
     /**
      * Method called in the action of callback URL.
@@ -28,9 +28,10 @@ interface Oauth2Adaptor
      * Fetch resource.
      * @param mixed $resource
      * @param string $accessToken
+     * @param bool $assco
      * @return string Response from authorization server.
      */
-    public function fetchResource($resource, $accessToken);
+    public function fetchResource($resource, $accessToken, $assco = true);
 }
 
 ?>

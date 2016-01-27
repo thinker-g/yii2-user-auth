@@ -6,17 +6,21 @@ use yii\base\Component;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
+use yii\web\BadRequestHttpException;
 
 class LinkedinAdaptor extends Component implements Oauth2Adaptor
 {
 
+    public $id = 'linkedin';
     public $clientId;
     public $clientSecret;
     public $apiAuth = 'https://www.linkedin.com/uas/oauth2/authorization';
+    public $apiAccToken = 'https://www.linkedin.com/uas/oauth2/accessToken';
+    public $apiRes = 'https://api.linkedin.com';
+    public $callbackRoute;
     public $scope;
     public $acctModel = 'thinker_g\UserAuth\models\ars\UserExtAccount';
     public $userModel;
-    public $callBackUriParams = ['from_source' => 'linkedin'];
 
     private $_accessToken;
 
@@ -36,14 +40,17 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
     public function authBack(Controller $controller)
     {
         if (!Yii::$app->request->get('code')) {
-            throw new ForbiddenHttpException('Illegal operation.');
+            if (Yii::$app->request->get('error')) {
+                return "Error [" . Yii::$app->request->get('error') . ']: ' . Yii::$app->request->get('error_description');
+            } else {
+                throw new ForbiddenHttpException('Illegal operation.');
+            }
         }
-        $accessToken = $this->getAccessToken(null, $controller);
+        $accessToken = $this->requestAccessToken();
         $searchCond = [
-            'open_uid' => $this->getOwnerId($accessToken),
-            'from_source' => 'linkedin',
+            'open_uid' => $this->getOpenUid($accessToken['access_token']),
+            'from_source' => $this->id,
         ];
-        // $extAcct = \thinker_g\UserAuth\models\ars\UserExtAccount::findOne($searchCond);
         if ($extAcct = call_user_func([$this->acctModel, 'findOne'], $searchCond)) {
             // find user model and log him in.
             echo 'Local user found.';
@@ -62,35 +69,34 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             var_dump($acctModel->attributes);
         }
     }
-    
+
     /**
      * @inheritdoc
      * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getAuthUrl()
      */
-    public function getAuthUrl(Controller $controller)
+    public function getAuthUrl($csrfToken = null)
     {
-        $data = [
+        $params = [
             'response_type' => 'code',
-            'client_id' => $this->client,
-            'redirect_uri' => Yii::$app->urlManager->createAbsoluteUrl([
-                $controller->module->id . '/' . $controller->id . '/back',
-                'from_source' => 'linkedin'
-            ]),
-            'state' => 'csrfToken',
+            'client_id' => $this->clientId,
+            'redirect_uri' => Yii::$app->urlManager->createAbsoluteUrl($this->callbackRoute),
+            'state' => $csrfToken, //TODO Enable csrf validation
             'scope' => $this->scope,
         ];
-        $query = http_build_query($data);
+        $query = http_build_query($params);
         return $this->apiAuth . '?' . $query;
     }
 
     /**
-     * @param string $redirectUri
-     * @param bool $assco Set to true to return an array, and false to return a StdObject.
+     *
+     * @param string $uid
+     * @param bool $assco Set to true to return an array, false to return an StdObject.
+     * @param bool $refresh
+     * @return mixed
      */
-    protected function getAccessToken($uid = null, Controller $controller = null, $assco = true)
+    public function requestAccessToken($uid = null, $assco = true, $refresh = false)
     {
-        $this->callBackUriParams[0] = $controller->module->id . '/' . $controller->id . '/back';
-        $redirectUri = Yii::$app->urlManager->createAbsoluteUrl($this->callBackUriParams);
+        $redirectUri = Yii::$app->urlManager->createAbsoluteUrl($this->callbackRoute);
         $params = [
             'grant_type' => 'authorization_code',
             'client_id' => $this->clientId,
@@ -100,7 +106,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         ];
 
         // Access Token request
-        $url = 'https://www.linkedin.com/uas/oauth2/accessToken?' . http_build_query($params);
+        $url = $this->apiAccToken . '?' . http_build_query($params);
 
         // Tell streams to make a POST request
         $context = stream_context_create([
@@ -111,8 +117,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         $response = file_get_contents($url, false, $context);
 
         // Native PHP object, please
-        $token = json_decode($response, $assco);
-        return $token['access_token'];
+        return json_decode($response, $assco);
     }
 
     /**
@@ -121,7 +126,6 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
      */
     public function fetchResource($resource, $accessToken, $assco = true)
     {
-
         $params = [
             'http' => [
                 'method' => 'GET',
@@ -130,7 +134,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         ];
 
         // Need to use HTTPS
-        $url = 'https://api.linkedin.com' . $resource;
+        $url = $this->apiRes . $resource;
 
         // Tell streams to make a (GET, POST, PUT, or DELETE) request
         // And use OAuth 2 access token as Authorization

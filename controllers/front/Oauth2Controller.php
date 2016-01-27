@@ -42,7 +42,7 @@ class Oauth2Controller extends ModelViewController
      */
     public function actionTryAuth($adaptorId)
     {
-        return Html::a('Authenticate via ' . $adaptorId, $this->getAdaptor($adaptorId)->getAuthUrl($this));
+        return Html::a('Authenticate via ' . $adaptorId, $this->getAdaptor($adaptorId)->getAuthUrl('coktn'));
     }
 
     /**
@@ -54,7 +54,7 @@ class Oauth2Controller extends ModelViewController
         if (!$adaptorId) {
             throw new BadRequestHttpException('Illegal operation.');
         }
-        $this->getAdaptor($adaptorId)->authBack($this);
+        return $this->getAdaptor($adaptorId)->authBack($this);
     }
 
     /**
