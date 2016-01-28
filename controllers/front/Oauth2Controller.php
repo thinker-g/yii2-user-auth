@@ -42,7 +42,7 @@ class Oauth2Controller extends ModelViewController
      */
     public function actionTryAuth($adaptorId)
     {
-        return Html::a('Authenticate via ' . $adaptorId, $this->getAdaptor($adaptorId)->getAuthUrl('coktn'));
+        return $this->render($this->viewID, ['adaptor' => $this->getAdaptor($adaptorId)]);
     }
 
     /**
@@ -50,6 +50,7 @@ class Oauth2Controller extends ModelViewController
      */
     public function actionBack()
     {
+        $this->view->title = 'Authentication Result';
         $adaptorId = Yii::$app->request->get($this->module->oauthAdaptorIdParam);
         if (!$adaptorId) {
             throw new BadRequestHttpException('Illegal operation.');

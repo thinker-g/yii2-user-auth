@@ -6,7 +6,7 @@ use yii\base\Component;
 use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
-use yii\web\BadRequestHttpException;
+use yii\base\ErrorException;
 
 class LinkedinAdaptor extends Component implements Oauth2Adaptor
 {
@@ -41,20 +41,45 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
     {
         if (!Yii::$app->request->get('code')) {
             if (Yii::$app->request->get('error')) {
-                return "Error [" . Yii::$app->request->get('error') . ']: ' . Yii::$app->request->get('error_description');
+                $controller->view->title = "Error: [" . Yii::$app->request->get('error') . ']';
+                $data = ['content' => Yii::$app->request->get('error_description')];
+                return $controller->render($controller->viewID, $data);
             } else {
                 throw new ForbiddenHttpException('Illegal operation.');
             }
         }
-        $accessToken = $this->requestAccessToken();
+        try {
+            $accessToken = $this->requestAccessToken();
+        } catch (ErrorException $e) {
+            $controller->view->title = 'Service Failure';
+            return $controller->render($controller->viewID, ['content' => 'Please go back and try again.']);
+        }
         $openUid = $this->getOpenUid($accessToken['access_token']);
-        if ($extAcct = call_user_func_array(
-            [$this->acctModel, 'findByOpenUid'],
-            [$openUid, $this->id]
-        )) {
+        if (Yii::$app->getUser()->isGuest) {
+            if ($extAcct = call_user_func([$this->acctModel, 'findByOpenUid'], $openUid, $this->id)) {
+                return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
+            } else {
+                return $controller->render($controller->viewID, ['content' => 'Reg new user and bind this Oauth Account']);
+            }
+        } else {
+            if ($extAcct = call_user_func([$this->acctModel, 'findByOpenUid'], $openUid, $this->id)) {
+                if ($extAcct->getUserId() == Yii::$app->getUser()->getId()) {
+                    return $controller->render($controller->viewID, ['content' => 'Linkedin account is already bound to current user.']);
+                } else {
+                    return $controller->render($controller->viewID, ['content' => 'This linkedin account has already been bound on another user.']);
+                }
+            } else {
+                if (call_user_func_array([$this->acctModel, 'findByUserId'], [Yii::$app->getUser()->getId(), $this->id])) {
+                    return $controller->render($controller->viewID, ['content' => 'Current user has already bound another Linkedin account']);
+                } else {
+                    return $controller->render($controller->viewID, ['content' => 'Bind this Linkedin account to current User.']);
+                }
+            }
+        }
+        /* if ($extAcct = call_user_func([$this->acctModel, 'findByOpenUid'], $openUid, $this->id)) {
             // Oauth Account exists.
             if (Yii::$app->getUser()->isGuest) {
-                echo 'Login via Openid.';
+                return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
             } else {
                 if ($extAcct->getUserId() == Yii::$app->getUser()->getId()) {
                     echo 'Already bound to current user.';
@@ -77,7 +102,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
                 }
             }
             // create user and link it to this account model.
-            /* if (!$this->userModel) {
+            if (!$this->userModel) {
                 $this->userModel = Yii::$app->getUser()->identityClass;
             }
             $user = Yii::createObject($this->userModel);
@@ -88,8 +113,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             $acctModel->load($searchCond, '');
             $acctModel->save(false);
             var_dump($acctModel->attributes);
-            */
-        }
+        } */
     }
 
     /**
