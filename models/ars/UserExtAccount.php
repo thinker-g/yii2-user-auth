@@ -94,4 +94,13 @@ class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
     {
         return self::findOne(['open_uid' => $openUid, 'from_source' => $from_source]);
     }
+
+    /**
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\Oauth2Account::findByUserId()
+     */
+    public function findByUserId($userId, $from_source)
+    {
+        return self::findOne(['user_id' => $userId, 'from_source' => $from_source]);
+    }
 }

@@ -47,16 +47,37 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             }
         }
         $accessToken = $this->requestAccessToken();
-        $searchCond = [
-            'open_uid' => $this->getOpenUid($accessToken['access_token']),
-            'from_source' => $this->id,
-        ];
-        if ($extAcct = call_user_func([$this->acctModel, 'findOne'], $searchCond)) {
-            // find user model and log him in.
-            echo 'Local user found.';
+        $openUid = $this->getOpenUid($accessToken['access_token']);
+        if ($extAcct = call_user_func_array(
+            [$this->acctModel, 'findByOpenUid'],
+            [$openUid, $this->id]
+        )) {
+            // Oauth Account exists.
+            if (Yii::$app->getUser()->isGuest) {
+                echo 'Login via Openid.';
+            } else {
+                if ($extAcct->getUserId() == Yii::$app->getUser()->getId()) {
+                    echo 'Already bound to current user.';
+                } else {
+                    echo 'This linkedin account has already been bound on another user.';
+                }
+            }
         } else {
+            // Oauth Account doesn't exist.
+            if (Yii::$app->getUser()->isGuest) {
+                echo 'Reg new user and bind this Oauth Account';
+            } else {
+                if (call_user_func_array(
+                    [$this->acctModel, 'findByUserId'],
+                    [Yii::$app->getUser()->getId(), $this->id]
+                )) {
+                    echo 'Current user have bound another Linkedin account.';
+                } else {
+                    echo 'Bind this Linkedin account to current user.';
+                }
+            }
             // create user and link it to this account model.
-            if (!$this->userModel) {
+            /* if (!$this->userModel) {
                 $this->userModel = Yii::$app->getUser()->identityClass;
             }
             $user = Yii::createObject($this->userModel);
@@ -67,6 +88,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             $acctModel->load($searchCond, '');
             $acctModel->save(false);
             var_dump($acctModel->attributes);
+            */
         }
     }
 
