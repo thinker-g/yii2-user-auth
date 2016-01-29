@@ -59,6 +59,18 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             if ($extAcct = call_user_func([$this->acctModel, 'findByOpenUid'], $openUid, $this->id)) {
                 return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
             } else {
+            /*// create user and link it to this account model.
+            if (!$this->userModel) {
+                $this->userModel = Yii::$app->getUser()->identityClass;
+            }
+            $user = Yii::createObject($this->userModel);
+            $user->save(false);
+            $acctModel = Yii::createObject($this->acctModel);
+            $searchCond['user_id'] = $user->primaryKey;
+            $searchCond['access_token'] = $accessToken;
+            $acctModel->load($searchCond, '');
+            $acctModel->save(false);
+            var_dump($acctModel->attributes);*/
                 return $controller->render($controller->viewID, ['content' => 'Reg new user and bind this Oauth Account']);
             }
         } else {
@@ -76,44 +88,6 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
                 }
             }
         }
-        /* if ($extAcct = call_user_func([$this->acctModel, 'findByOpenUid'], $openUid, $this->id)) {
-            // Oauth Account exists.
-            if (Yii::$app->getUser()->isGuest) {
-                return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
-            } else {
-                if ($extAcct->getUserId() == Yii::$app->getUser()->getId()) {
-                    echo 'Already bound to current user.';
-                } else {
-                    echo 'This linkedin account has already been bound on another user.';
-                }
-            }
-        } else {
-            // Oauth Account doesn't exist.
-            if (Yii::$app->getUser()->isGuest) {
-                echo 'Reg new user and bind this Oauth Account';
-            } else {
-                if (call_user_func_array(
-                    [$this->acctModel, 'findByUserId'],
-                    [Yii::$app->getUser()->getId(), $this->id]
-                )) {
-                    echo 'Current user have bound another Linkedin account.';
-                } else {
-                    echo 'Bind this Linkedin account to current user.';
-                }
-            }
-            // create user and link it to this account model.
-            if (!$this->userModel) {
-                $this->userModel = Yii::$app->getUser()->identityClass;
-            }
-            $user = Yii::createObject($this->userModel);
-            $user->save(false);
-            $acctModel = Yii::createObject($this->acctModel);
-            $searchCond['user_id'] = $user->primaryKey;
-            $searchCond['access_token'] = $accessToken;
-            $acctModel->load($searchCond, '');
-            $acctModel->save(false);
-            var_dump($acctModel->attributes);
-        } */
     }
 
     /**
