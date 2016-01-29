@@ -36,6 +36,7 @@ trait UserExtAccountSearch
                 'primary_email',
                 'from_source',
                 'access_token',
+                'acctoken_expires_at',
                 'email',
                 'created_at',
                 'updated_at'
@@ -96,6 +97,7 @@ trait UserExtAccountSearch
             self::tableName() . '.id' => $this->id,
             'user_id' => $this->user_id,
             'open_uid' => $this->open_uid,
+            'acctoken_expires_at' => $this->acctoken_expires_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'from_source' => $this->from_source,

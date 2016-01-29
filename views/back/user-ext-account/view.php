@@ -38,6 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'user_id',
                 'from_source',
                 'access_token',
+                'acctoken_expires_at',
                 'open_uid',
                 'email:email',
                 'created_at',

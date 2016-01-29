@@ -20,6 +20,7 @@ use thinker_g\UserAuth\interfaces\Oauth2Account;
  * @property integer $user_id
  * @property string $from_source
  * @property string $access_token
+ * @property string $acctoken_expires_at
  * @property string $open_uid
  * @property string $email
  * @property string $created_at
@@ -55,7 +56,7 @@ class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
             [['user_id'], 'integer'],
             [['from_source', 'access_token'], 'required'],
             [['user_id', 'from_source'], 'unique', 'targetAttribute' => ['user_id', 'from_source']],
-            [['created_at', 'updated_at'], 'safe'],
+            [['created_at', 'updated_at', 'acctoken_expires_at'], 'safe'],
             [['from_source'], 'string', 'max' => 64],
             [['access_token', 'email', 'open_uid'], 'string', 'max' => 255]
         ];
@@ -71,6 +72,7 @@ class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
             'user_id' => Yii::t('app', 'User ID'),
             'from_source' => Yii::t('app', 'From Source'),
             'access_token' => Yii::t('app', 'Access Token'),
+            'acctoken_expires_at' => Yii::t('app', 'Access Token Expires At'),
             'open_uid' => Yii::t('app', 'Open UID'),
             'email' => Yii::t('app', 'Email'),
             'created_at' => Yii::t('app', 'Created At'),

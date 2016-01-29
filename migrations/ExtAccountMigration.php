@@ -26,6 +26,7 @@ class ExtAccountMigration extends CreationMigration
                 'user_id' => 'INT',
                 'from_source' => 'VARCHAR(64) NOT NULL',
                 'access_token' => 'VARCHAR(255) NOT NULL',
+                'acctoken_expires_at' => 'TIMESTAMP NULL',
                 'open_uid' => 'TEXT NULL DEFAULT NULL',
                 'email' => 'VARCHAR(255) NULL',
                 'created_at' => 'TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP',
