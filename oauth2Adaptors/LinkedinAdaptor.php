@@ -7,6 +7,8 @@ use Yii;
 use yii\web\Controller;
 use yii\web\ForbiddenHttpException;
 use yii\base\ErrorException;
+use yii\helpers\ArrayHelper;
+use yii\base\Model;
 
 class LinkedinAdaptor extends Component implements Oauth2Adaptor
 {
@@ -19,8 +21,8 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
     public $apiRes = 'https://api.linkedin.com';
     public $callbackRoute;
     public $scope;
-    public $acctModel = 'thinker_g\UserAuth\models\ars\UserExtAccount';
-    public $userModel;
+    public $acctModelClass = 'thinker_g\UserAuth\models\ars\UserExtAccount';
+    public $userModelClass;
 
     private $_accessToken;
 
@@ -56,35 +58,41 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         }
         $openUid = $this->getOpenUid($accessToken['access_token']);
         if (Yii::$app->getUser()->isGuest) {
-            if ($extAcct = call_user_func([$this->acctModel, 'findByOpenUid'], $openUid, $this->id)) {
-                return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
+            if ($extAcct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $this->id)) {
+                $this->loginByOpenUid($extAcct->open_uid);
+                $controller->goBack();
+                // return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
             } else {
-            /*// create user and link it to this account model.
-            if (!$this->userModel) {
-                $this->userModel = Yii::$app->getUser()->identityClass;
-            }
-            $user = Yii::createObject($this->userModel);
-            $user->save(false);
-            $acctModel = Yii::createObject($this->acctModel);
-            $searchCond['user_id'] = $user->primaryKey;
-            $searchCond['access_token'] = $accessToken;
-            $acctModel->load($searchCond, '');
-            $acctModel->save(false);
-            var_dump($acctModel->attributes);*/
-                return $controller->render($controller->viewID, ['content' => 'Reg new user and bind this Oauth Account']);
+                $this->bindAccount($user = $this->createUser(), [
+                    'user_id' => Yii::$app->getUser()->getId(),
+                    'from_source' => $this->id,
+                    'open_uid' => $openUid,
+                    'access_token' => $accessToken['access_token'],
+                    'acctoken_expires_at' => date('Y-m-d H:i:s', $accessToken['expires_in'] + time()),
+                ]);
+                Yii::$app->getUser()->login($user) && $controller->goBack();
+                return $controller->render($controller->viewID, ['content' => 'Something wrong happened, please try again.']);
+                // return $controller->render($controller->viewID, ['content' => 'Reg new user and bind this Oauth Account']);
             }
         } else {
-            if ($extAcct = call_user_func([$this->acctModel, 'findByOpenUid'], $openUid, $this->id)) {
+            if ($extAcct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $this->id)) {
                 if ($extAcct->getUserId() == Yii::$app->getUser()->getId()) {
                     return $controller->render($controller->viewID, ['content' => 'Linkedin account is already bound to current user.']);
                 } else {
                     return $controller->render($controller->viewID, ['content' => 'This linkedin account has already been bound on another user.']);
                 }
             } else {
-                if (call_user_func_array([$this->acctModel, 'findByUserId'], [Yii::$app->getUser()->getId(), $this->id])) {
+                if (call_user_func_array([$this->acctModelClass, 'findByUserId'], [Yii::$app->getUser()->getId(), $this->id])) {
                     return $controller->render($controller->viewID, ['content' => 'Current user has already bound another Linkedin account']);
                 } else {
-                    return $controller->render($controller->viewID, ['content' => 'Bind this Linkedin account to current User.']);
+                    $this->bindAccount(Yii::$app->getUser()->getIdentity(true), [
+                        'user_id' => Yii::$app->getUser()->getId(),
+                        'from_source' => $this->id,
+                        'open_uid' => $openUid,
+                        'access_token' => $accessToken['access_token'],
+                        'acctoken_expires_at' => date('Y-m-d H:i:s', $accessToken['expires_in'] + time()),
+                    ]);
+                    return $controller->render($controller->viewID, ['content' => 'Linkedin account is bound to current User.']);
                 }
             }
         }
@@ -165,6 +173,40 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
 
         // Native PHP object, please
         return json_decode($response, $assco);
+    }
+
+    public function loginByOpenUid($openUid, $fromSource = 'linkedin')
+    {
+        $acct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $fromSource);
+        if ($acct) {
+            if (!$this->userModelClass) {
+                $this->userModelClass = Yii::$app->getUser()->identityClass;
+            }
+            $userIdentity = call_user_func([$this->userModelClass, 'findOne'], $acct->getUserId());
+            if ($userIdentity) {
+                Yii::$app->getUser()->login($userIdentity);
+            }
+            return false;
+        }
+        return false;
+    }
+
+    public function bindAccount(Model $user, $oauthAttrs)
+    {
+        $config = ArrayHelper::merge(['class' => $this->acctModelClass], $oauthAttrs);
+        $acct = Yii::createObject($config);
+        $acct->setUserId($user->primaryKey);
+        return $acct->save(false) ? $acct : false;
+    }
+
+    public function createUser($attrs = [])
+    {
+        if (!$this->userModelClass) {
+            $this->userModelClass = Yii::$app->getUser()->identityClass;
+        }
+        $config = ArrayHelper::merge(['class' => $this->userModelClass], $attrs);
+        $user = Yii::createObject($config);
+        return $user->save(false) ? $user : false;
     }
 }
 

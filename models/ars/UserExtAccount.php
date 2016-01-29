@@ -99,9 +99,18 @@ class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
 
     /**
      * @inheritdoc
+     * @see \thinker_g\UserAuth\interfaces\Oauth2Account::setUserId()
+     */
+    public function setUserId($userId)
+    {
+        $this->user_id = $userId;
+    }
+
+    /**
+     * @inheritdoc
      * @see \thinker_g\UserAuth\interfaces\Oauth2Account::findByOpenUid()
      */
-    public function findByOpenUid($openUid, $from_source)
+    public static function findByOpenUid($openUid, $from_source)
     {
         return self::findOne(['open_uid' => $openUid, 'from_source' => $from_source]);
     }
@@ -110,7 +119,7 @@ class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
      * @inheritdoc
      * @see \thinker_g\UserAuth\interfaces\Oauth2Account::findByUserId()
      */
-    public function findByUserId($userId, $from_source)
+    public static function findByUserId($userId, $from_source)
     {
         return self::findOne(['user_id' => $userId, 'from_source' => $from_source]);
     }
