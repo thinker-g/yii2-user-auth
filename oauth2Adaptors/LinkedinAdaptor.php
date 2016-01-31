@@ -9,6 +9,7 @@ use yii\web\ForbiddenHttpException;
 use yii\base\ErrorException;
 use yii\helpers\ArrayHelper;
 use yii\base\Model;
+use yii\web\BadRequestHttpException;
 
 class LinkedinAdaptor extends Component implements Oauth2Adaptor
 {
@@ -48,6 +49,13 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
                 return $controller->render($controller->viewID, $data);
             } else {
                 throw new ForbiddenHttpException('Illegal operation.');
+            }
+        }
+        if ($controller->enableCsrfValidation && Yii::$app->getErrorHandler()->exception === null) {
+            $request = Yii::$app->request;
+            $_POST[$request->methodParam] = 'POST';
+            if (!$request->validateCsrfToken($request->get('state'))) {
+                throw new BadRequestHttpException(Yii::t('yii', 'Unable to verify your data submission.'));
             }
         }
         try {
