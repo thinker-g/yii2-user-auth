@@ -33,7 +33,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
      */
     public function getOpenUid($accessToken)
     {
-        return $this->fetchResource('/v1/people/~:(id)', $accessToken)['id'];
+        return $this->fetchResource('/v1/people/~:(id)', $accessToken, 'id');
     }
 
     /**
@@ -185,7 +185,12 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         $response = file_get_contents($url, false, $context);
 
         // Native PHP object, please
-        return json_decode($response, $assco);
+        $result = json_decode($response, $assco);
+        if ($assco) {
+            return is_null($key) ? $result : $result[$key];
+        } else {
+            return is_null($key) ? $result : $result->$key;
+        }
     }
 
     public function loginByOpenUid($openUid, $fromSource = 'linkedin')
