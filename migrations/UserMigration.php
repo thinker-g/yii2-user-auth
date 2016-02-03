@@ -24,9 +24,11 @@ class UserMigration extends CreationMigration
             self::K_COLS => [
                 'id' => 'INT PRIMARY KEY AUTO_INCREMENT',
                 'username' => 'VARCHAR(255) NOT NULL',
+                'display_name' => 'VARCHAR(255) NOT NULL',
                 'primary_email' => 'VARCHAR(255) NULL',
+                'phone' => 'VARCHAR(32) NULL',
                 'password_hash' => 'VARCHAR(255) NULL',
-                'status' => 'TINYINT(3) UNSIGNED NULL',
+                'status' => 'TINYINT(4) UNSIGNED NULL',
                 'auth_key' => 'VARCHAR(64) NULL',
                 'password_reset_token' => 'VARCHAR(255) NULL',
                 'created_at' => 'TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP',

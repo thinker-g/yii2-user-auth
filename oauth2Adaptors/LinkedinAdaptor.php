@@ -65,36 +65,36 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             return $controller->render($controller->viewID, ['content' => 'Please go back and try again.']);
         }
         $openUid = $this->getOpenUid($accessToken['access_token']);
-        if (Yii::$app->getUser()->isGuest) {
+        if (Yii::$app->user->isGuest) {
             if ($extAcct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $this->id)) {
                 $this->loginByOpenUid($extAcct->open_uid);
                 $controller->goBack();
                 // return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
             } else {
                 $this->bindAccount($user = $this->createUser(), [
-                    'user_id' => Yii::$app->getUser()->getId(),
+                    'user_id' => Yii::$app->user->getId(),
                     'from_source' => $this->id,
                     'open_uid' => $openUid,
                     'access_token' => $accessToken['access_token'],
                     'acctoken_expires_at' => date('Y-m-d H:i:s', $accessToken['expires_in'] + time()),
                 ]);
-                Yii::$app->getUser()->login($user) && $controller->goBack();
+                Yii::$app->user->login($user) && $controller->goBack();
                 return $controller->render($controller->viewID, ['content' => 'Something wrong happened, please try again.']);
                 // return $controller->render($controller->viewID, ['content' => 'Reg new user and bind this Oauth Account']);
             }
         } else {
             if ($extAcct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $this->id)) {
-                if ($extAcct->getUserId() == Yii::$app->getUser()->getId()) {
+                if ($extAcct->getUserId() == Yii::$app->user->getId()) {
                     return $controller->render($controller->viewID, ['content' => 'Linkedin account is already bound to current user.']);
                 } else {
                     return $controller->render($controller->viewID, ['content' => 'This linkedin account has already been bound on another user.']);
                 }
             } else {
-                if (call_user_func_array([$this->acctModelClass, 'findByUserId'], [Yii::$app->getUser()->getId(), $this->id])) {
+                if (call_user_func_array([$this->acctModelClass, 'findByUserId'], [Yii::$app->user->getId(), $this->id])) {
                     return $controller->render($controller->viewID, ['content' => 'Current user has already bound another Linkedin account']);
                 } else {
-                    $this->bindAccount(Yii::$app->getUser()->getIdentity(true), [
-                        'user_id' => Yii::$app->getUser()->getId(),
+                    $this->bindAccount(Yii::$app->user->getIdentity(true), [
+                        'user_id' => Yii::$app->user->getId(),
                         'from_source' => $this->id,
                         'open_uid' => $openUid,
                         'access_token' => $accessToken['access_token'],
@@ -160,7 +160,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
      * @inheritdoc
      * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::fetchResource()
      */
-    public function fetchResource($resource, $accessToken, $assco = true)
+    public function fetchResource($resource, $accessToken, $key = null,  $assco = true)
     {
         $params = [
             'http' => [
@@ -188,11 +188,11 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         $acct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $fromSource);
         if ($acct) {
             if (!$this->userModelClass) {
-                $this->userModelClass = Yii::$app->getUser()->identityClass;
+                $this->userModelClass = Yii::$app->user->identityClass;
             }
             $userIdentity = call_user_func([$this->userModelClass, 'findOne'], $acct->getUserId());
             if ($userIdentity) {
-                Yii::$app->getUser()->login($userIdentity);
+                return Yii::$app->user->login($userIdentity);
             }
             return false;
         }
@@ -210,11 +210,11 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
     public function createUser($attrs = [])
     {
         if (!$this->userModelClass) {
-            $this->userModelClass = Yii::$app->getUser()->identityClass;
+            $this->userModelClass = Yii::$app->user->identityClass;
         }
         $config = ArrayHelper::merge(['class' => $this->userModelClass], $attrs);
         $user = Yii::createObject($config);
-        return $user->save(false) ? $user : false;
+        return $user->save() ? $user : false;
     }
 }
 

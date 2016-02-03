@@ -19,7 +19,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'username') ?>
 
+    <?= $form->field($model, 'display_name') ?>
+
     <?= $form->field($model, 'primary_email') ?>
+
+    <?= $form->field($model, 'phone') ?>
 
     <?= $form->field($model, 'password_hash') ?>
 

@@ -16,7 +16,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'primary_email')->textInput(['maxlength' => 255]) ?>
 
+    <?= $form->field($model, 'phone')->textInput(['maxlength' => 255]) ?>
+
     <?= $form->field($model, 'password')->passwordInput(['maxlength' => 255]) ?>
+
+    <?= $form->field($model, 'display_name')->textInput(['maxlength' => 255]) ?>
 
     <?php
         $statusField = $form->field($model, 'status');

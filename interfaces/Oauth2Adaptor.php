@@ -28,10 +28,11 @@ interface Oauth2Adaptor
      * Fetch resource.
      * @param mixed $resource
      * @param string $accessToken
+     * @param string $key
      * @param bool $assco
      * @return string Response from authorization server.
      */
-    public function fetchResource($resource, $accessToken, $assco = true);
+    public function fetchResource($resource, $accessToken, $key = null, $assco = true);
 }
 
 ?>

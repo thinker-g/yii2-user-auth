@@ -27,7 +27,9 @@ use yii\base\NotSupportedException;
  * @property integer $id
  * @property string $username
  * @property string $primary_email
+ * @property string $phone
  * @property string $password_hash
+ * @property string $display_name
  * @property integer $status
  * @property string $auth_key
  * @property string $password_reset_token
@@ -91,8 +93,8 @@ class User extends ActiveRecord implements IdentityInterface, Authenticatable, P
     {
         //@todo need to add a validate to ensure at least one of username or primary_email has a value.
         return [
-            [['username', 'primary_email'], 'unique'],
-            [['username', 'primary_email'], 'trim'],
+            [['username', 'primary_email', 'phone', 'display_name'], 'unique'],
+            [['username', 'primary_email', 'phone', 'display_name'], 'trim'],
             [['primary_email'], 'email'],
             [['username', 'password', 'primary_email'], 'string', 'min' => 5, 'max' => 255],
             [['password_hash', 'password_reset_token'], 'string', 'max' => 255],
@@ -126,8 +128,10 @@ class User extends ActiveRecord implements IdentityInterface, Authenticatable, P
             'id' => Yii::t('app', 'Id'),
             'username' => Yii::t('app', 'Username'),
             'primary_email' => Yii::t('app', 'Primary Email'),
+            'phone' => Yii::t('app', 'Phone'),
             'Password' => Yii::t('app', 'Password'),
             'status' => Yii::t('app', 'Status'),
+            'display_name' => Yii::t('app', 'Display Name'),
             'auth_key' => Yii::t('app', 'Auth Key'),
             'password_reset_token' => Yii::t('app', 'Password reset Token'),
             'created_at' => Yii::t('app', 'Created At'),
@@ -173,6 +177,7 @@ class User extends ActiveRecord implements IdentityInterface, Authenticatable, P
             ['or',
                 ['username' => $login],
                 ['primary_email' => $login],
+                ['phone' => $login],
             ],
         ])->one();
     }

@@ -32,7 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'username',
+            'display_name',
             'primary_email:email',
+            'phone',
             // 'password_hash',
             [
                 'attribute' => 'status',
@@ -45,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             // 'auth_key',
             // 'password_reset_token',
-            'created_at',
+            // 'created_at',
             // 'updated_at',
             'last_login_at:raw:Last Login',
 

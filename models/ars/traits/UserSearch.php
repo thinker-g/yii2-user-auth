@@ -27,7 +27,7 @@ trait UserSearch
     {
         return [
             [['id', 'status'], 'integer'],
-            [['username', 'primary_email', 'password_hash', 'auth_key', 'password_reset_token', 'created_at', 'updated_at', 'last_login_at'], 'safe'],
+            [['username', 'primary_email','phone', 'password_hash', 'display_name', 'auth_key', 'password_reset_token', 'created_at', 'updated_at', 'last_login_at'], 'safe'],
         ];
     }
 
@@ -76,6 +76,8 @@ trait UserSearch
 
         $query->andFilterWhere(['like', 'username', $this->username])
         ->andFilterWhere(['like', 'primary_email', $this->primary_email])
+        ->andFilterWhere(['like', 'phone', $this->primary_email])
+        ->andFilterWhere(['like', 'display_name', $this->primary_email])
         // ->andFilterWhere(['like', 'password_hash', $this->password_hash])
         // ->andFilterWhere(['like', 'auth_key', $this->auth_key])
         ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
