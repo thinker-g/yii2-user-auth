@@ -71,7 +71,12 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
                 $controller->goBack();
                 // return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
             } else {
-                $this->bindAccount($user = $this->createUser(), [
+                $res = $this->fetchResource('/v1/people/~:(email-address,first-name)', $accessToken['access_token']);
+                $user = $this->createUser([
+                    'primary_email' => $res['emailAddress'],
+                    'display_name' => $res['firstName'],
+                ]);
+                $this->bindAccount($user, [
                     'user_id' => Yii::$app->user->getId(),
                     'from_source' => $this->id,
                     'open_uid' => $openUid,
