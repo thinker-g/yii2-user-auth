@@ -116,7 +116,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
             'response_type' => 'code',
             'client_id' => $this->clientId,
             'redirect_uri' => Yii::$app->urlManager->createAbsoluteUrl($this->callbackRoute),
-            'state' => $csrfToken, //TODO Enable csrf validation
+            'state' => $csrfToken,
             'scope' => $this->scope,
         ];
         $query = http_build_query($params);
