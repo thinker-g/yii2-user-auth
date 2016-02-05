@@ -12,7 +12,6 @@ namespace thinker_g\UserAuth\controllers\front;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
-use yii\helpers\Html;
 use thinker_g\Helpers\controllers\ModelViewController;
 
 /**
@@ -22,6 +21,10 @@ use thinker_g\Helpers\controllers\ModelViewController;
  */
 class Oauth2Controller extends ModelViewController
 {
+    /**
+     * @var string
+     */
+    public $defaultAction = 'try-auth';
 
     /**
      * @inheritdoc

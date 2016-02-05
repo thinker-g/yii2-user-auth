@@ -1,17 +1,12 @@
 <?php
 namespace thinker_g\UserAuth\oauth2Adaptors;
 
-use thinker_g\UserAuth\interfaces\Oauth2Adaptor;
-use yii\base\Component;
-use Yii;
-use yii\web\Controller;
+use thinker_g\UserAuth\oauth2Adaptors\BaseOauth2Adaptor;
+use thinker_g\Helpers\controllers\ModelViewController as Controller;
 use yii\web\ForbiddenHttpException;
-use yii\base\ErrorException;
-use yii\helpers\ArrayHelper;
-use yii\base\Model;
-use yii\web\BadRequestHttpException;
+use Yii;
 
-class LinkedinAdaptor extends Component implements Oauth2Adaptor
+class LinkedinAdaptor extends BaseOauth2Adaptor
 {
 
     public $id = 'linkedin';
@@ -20,96 +15,7 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
     public $apiAuth = 'https://www.linkedin.com/uas/oauth2/authorization';
     public $apiAccToken = 'https://www.linkedin.com/uas/oauth2/accessToken';
     public $apiRes = 'https://api.linkedin.com';
-    public $callbackRoute;
-    public $scope;
-    public $acctModelClass = 'thinker_g\UserAuth\models\ars\UserExtAccount';
-    public $userModelClass;
-
-    private $_accessToken;
-
-    /**
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getOpenUid()
-     */
-    public function getOpenUid($accessToken)
-    {
-        return $this->fetchResource('/v1/people/~:(id)', $accessToken, 'id');
-    }
-
-    /**
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::authBack()
-     */
-    public function authBack(Controller $controller)
-    {
-        if (!Yii::$app->request->get('code')) {
-            if (Yii::$app->request->get('error')) {
-                $controller->view->title = "Error: [" . Yii::$app->request->get('error') . ']';
-                $data = ['content' => Yii::$app->request->get('error_description')];
-                return $controller->render($controller->viewID, $data);
-            } else {
-                throw new ForbiddenHttpException('Illegal operation.');
-            }
-        }
-        if ($controller->enableCsrfValidation && Yii::$app->getErrorHandler()->exception === null) {
-            $request = Yii::$app->request;
-            $_POST[$request->methodParam] = 'POST';
-            if (!$request->validateCsrfToken($request->get('state'))) {
-                throw new BadRequestHttpException(Yii::t('yii', 'Unable to verify your data submission.'));
-            }
-        }
-        try {
-            $accessToken = $this->requestAccessToken();
-        } catch (ErrorException $e) {
-            $controller->view->title = 'Service Failure';
-            return $controller->render($controller->viewID, ['content' => 'Please go back and try again.']);
-        }
-        $openUid = $this->getOpenUid($accessToken['access_token']);
-        if (Yii::$app->user->isGuest) {
-            if ($extAcct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $this->id)) {
-                $this->loginByOpenUid($extAcct->open_uid);
-                $controller->goBack();
-                // return $controller->render($controller->viewID, ['content' => 'Login via Openid.']);
-            } else {
-                $res = $this->fetchResource('/v1/people/~:(email-address,first-name)', $accessToken['access_token']);
-                $user = $this->createUser([
-                    'primary_email' => $res['emailAddress'],
-                    'display_name' => $res['firstName'],
-                ]);
-                $this->bindAccount($user, [
-                    'user_id' => Yii::$app->user->getId(),
-                    'from_source' => $this->id,
-                    'open_uid' => $openUid,
-                    'access_token' => $accessToken['access_token'],
-                    'acctoken_expires_at' => date('Y-m-d H:i:s', $accessToken['expires_in'] + time()),
-                ]);
-                Yii::$app->user->login($user) && $controller->goBack();
-                return $controller->render($controller->viewID, ['content' => 'Something wrong happened, please try again.']);
-                // return $controller->render($controller->viewID, ['content' => 'Reg new user and bind this Oauth Account']);
-            }
-        } else {
-            if ($extAcct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $this->id)) {
-                if ($extAcct->getUserId() == Yii::$app->user->getId()) {
-                    return $controller->render($controller->viewID, ['content' => 'Linkedin account is already bound to current user.']);
-                } else {
-                    return $controller->render($controller->viewID, ['content' => 'This linkedin account has already been bound on another user.']);
-                }
-            } else {
-                if (call_user_func_array([$this->acctModelClass, 'findByUserId'], [Yii::$app->user->getId(), $this->id])) {
-                    return $controller->render($controller->viewID, ['content' => 'Current user has already bound another Linkedin account']);
-                } else {
-                    $this->bindAccount(Yii::$app->user->getIdentity(true), [
-                        'user_id' => Yii::$app->user->getId(),
-                        'from_source' => $this->id,
-                        'open_uid' => $openUid,
-                        'access_token' => $accessToken['access_token'],
-                        'acctoken_expires_at' => date('Y-m-d H:i:s', $accessToken['expires_in'] + time()),
-                    ]);
-                    return $controller->render($controller->viewID, ['content' => 'Linkedin account is bound to current User.']);
-                }
-            }
-        }
-    }
+    public $csrfParam = 'state';
 
     /**
      * @inheritdoc
@@ -129,13 +35,10 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
     }
 
     /**
-     *
-     * @param string $uid
-     * @param bool $assco Set to true to return an array, false to return an StdObject.
-     * @param bool $refresh
-     * @return mixed
+     * @param string $assco
+     * @return array
      */
-    public function requestAccessToken($uid = null, $assco = true, $refresh = false)
+    public function requestAccessToken()
     {
         $redirectUri = Yii::$app->urlManager->createAbsoluteUrl($this->callbackRoute);
         $params = [
@@ -158,7 +61,16 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         $response = file_get_contents($url, false, $context);
 
         // Native PHP object, please
-        return json_decode($response, $assco);
+        $data = json_decode($response, true);
+        return [
+            'token' => $data['access_token'],
+            'expiresAt' => $data['expires_in'] + time(),
+        ];
+    }
+
+    public function fetchOpenUid($accessToken)
+    {
+        return $this->fetchResource('/v1/people/~:(id)', $accessToken['token'], 'id');
     }
 
     /**
@@ -193,38 +105,68 @@ class LinkedinAdaptor extends Component implements Oauth2Adaptor
         }
     }
 
-    public function loginByOpenUid($openUid, $fromSource = 'linkedin')
+    /**
+     * @override
+     * @param Controller $controller
+     * @throws ForbiddenHttpException
+     */
+    public function handleAuthFailed(Controller $controller)
     {
-        $acct = call_user_func([$this->acctModelClass, 'findByOpenUid'], $openUid, $fromSource);
-        if ($acct) {
-            if (!$this->userModelClass) {
-                $this->userModelClass = Yii::$app->user->identityClass;
-            }
-            $userIdentity = call_user_func([$this->userModelClass, 'findOne'], $acct->getUserId());
-            if ($userIdentity) {
-                return Yii::$app->user->login($userIdentity);
-            }
-            return false;
+        if (Yii::$app->request->get('error')) {
+            $controller->view->title = "Error: [" . Yii::$app->request->get('error') . ']';
+            $data = ['message' => Yii::$app->request->get('error_description')];
+            return $controller->render($controller->viewID, $data);
+        } else {
+            throw new ForbiddenHttpException('Illegal operation.');
         }
-        return false;
     }
 
-    public function bindAccount(Model $user, $oauthAttrs)
+    /**
+     * @override
+     * @param array $accessToken
+     * @param Controller $controller
+     */
+    public function handleGuestNoAcct(array $accessToken, Controller $controller)
     {
-        $config = ArrayHelper::merge(['class' => $this->acctModelClass], $oauthAttrs);
-        $acct = Yii::createObject($config);
-        $acct->setUserId($user->primaryKey);
-        return $acct->save(false) ? $acct : false;
+        $res = $this->fetchResource('/v1/people/~:(id,email-address,first-name)', $accessToken['token']);
+
+        $user = $this->createUser([
+            'primary_email' => $res['emailAddress'],
+            'display_name' => $res['firstName'],
+        ]); // TODO creation validation failed.
+        $this->bindAccount($user, [
+            'user_id' => Yii::$app->user->id,
+            'from_source' => $this->id,
+            'open_uid' => $res['id'],
+            'access_token' => $accessToken['token'],
+            'acctoken_expires_at' => date('Y-m-d H:i:s', $accessToken['expiresAt']),
+        ]);
+        Yii::$app->user->login($user) && $controller->goBack();
+        return $controller->render($controller->viewID, ['message' => 'Something wrong happened, please try again.']);
+        // return $controller->render($controller->viewID, ['message' => 'Reg new user and bind this Oauth Account']);
     }
 
-    public function createUser($attrs = [])
+    /**
+     * @override
+     * @param array $accessToken
+     * @param string $openUid
+     * @param Controller $controller
+     * @return string
+     */
+    public function handleUserNoAcct(array $accessToken, $openUid, Controller $controller)
     {
-        if (!$this->userModelClass) {
-            $this->userModelClass = Yii::$app->user->identityClass;
+        if (call_user_func_array([$this->acctModelClass, 'findByUserId'], [Yii::$app->user->getId(), $this->id])) {
+            return $controller->render($controller->viewID, ['message' => 'Current user has already bound another Linkedin account']);
+        } else {
+            $this->bindAccount(Yii::$app->user->getIdentity(true), [
+                'user_id' => Yii::$app->user->getId(),
+                'from_source' => $this->id,
+                'open_uid' => $openUid,
+                'access_token' => $accessToken['token'],
+                'acctoken_expires_at' => date('Y-m-d H:i:s', $accessToken['expiresAt']),
+            ]);
+            return $controller->render($controller->viewID, ['message' => 'Linkedin account is bound to current User.']);
         }
-        $config = ArrayHelper::merge(['class' => $this->userModelClass], $attrs);
-        $user = Yii::createObject($config);
-        return $user->save() ? $user : false;
     }
 }
 

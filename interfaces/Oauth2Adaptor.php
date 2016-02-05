@@ -1,6 +1,6 @@
 <?php
 namespace thinker_g\UserAuth\interfaces;
-use yii\web\Controller;
+use thinker_g\Helpers\controllers\ModelViewController as Controller;
 
 interface Oauth2Adaptor
 {
@@ -20,10 +20,10 @@ interface Oauth2Adaptor
 
     /**
      * Get Resource Owner's open user ID.
-     * @param string $accessToken
+     * @param array $accessToken
      * @return string Resource owner ID.
      */
-    public function getOpenUid($accessToken);
+    public function fetchOpenUid($accessToken);
     /**
      * Fetch resource.
      * @param mixed $resource
