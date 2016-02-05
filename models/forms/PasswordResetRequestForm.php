@@ -71,7 +71,7 @@ class PasswordResetRequestForm extends CredentialForm
      */
     public function sendEmail()
     {
-        
+
         /* @var $user User */
         $userModelClass = $this->getCredentialModelClass();
         $user = $userModelClass::findByLogin($this->email);
@@ -83,7 +83,7 @@ class PasswordResetRequestForm extends CredentialForm
                     . ' must implement interface \\thinker_g\\UserAuth\\interfaces\\PasswordResettable .'
                 );
             } else {
-                
+
                 if (!$userModelClass::isPasswordResetTokenValid($user->password_reset_token)) {
                     $user->generatePasswordResetToken();
                 }

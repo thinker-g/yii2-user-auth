@@ -22,28 +22,28 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Edit');
     <h1><?= Html::encode($this->title) ?></h1>
 
     <div class="user-form">
-    
+
         <?php $form = ActiveForm::begin(); ?>
-    
+
         <?= $form->field($model, 'username')->textInput(['maxlength' => 255]) ?>
-    
+
         <?= $form->field($model, 'primary_email')->textInput(['maxlength' => 255]) ?>
-    
+
         <?= $form->field($model, 'password')->passwordInput(['maxlength' => 255]) ?>
-    
+
         <?php
             $statusField = $form->field($model, 'status');
             is_null($model->status) && ($model->status = $model::$defaultStatusCode);
             ($model->id == Yii::$app->getUser()->id) && $statusField->hintOptions['class'] = ' text-danger';
         ?>
         <?= $statusField->dropDownList($model->availableStatus()) ?>
-    
+
         <div class="form-group">
             <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
         </div>
-    
+
         <?php ActiveForm::end(); ?>
-    
+
     </div><!-- $.user-form -->
 
 </div>
