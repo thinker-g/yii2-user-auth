@@ -116,26 +116,6 @@ class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
     }
 
     /**
-     *
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Account::getAccessToken()
-     */
-    public function getAccessToken()
-    {
-        return $this->access_token;
-    }
-
-    /**
-     *
-     * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Account::setAccessToken()
-     */
-    public function setAccessToken($accessToken)
-    {
-        $this->access_token = $accessToken;
-    }
-
-    /**
      * @inheritdoc
      * @see \thinker_g\UserAuth\interfaces\Oauth2Account::findByOpenUid()
      */

@@ -45,7 +45,7 @@ abstract class BaseOauth2Adaptor extends Component implements Oauth2Adaptor
             return $this->handleAuthFailed($controller);
         }
         try {
-            $accessToken = $this->requestAccessToken();
+            $accessToken = $this->getAccessToken();
             $openUid = $this->fetchOpenUid($accessToken);
         } catch (\Exception $e) {
             return $this->handleServiceFailed($e, $controller);
@@ -129,7 +129,7 @@ abstract class BaseOauth2Adaptor extends Component implements Oauth2Adaptor
 
     public function handleGuestAcct(Oauth2Account $oauthAcct, Controller $controller)
     {
-        $this->loginByOpenUid($oauthAcct->openUid);
+        $this->loginByOpenUid($oauthAcct->getOpenUid());
         $controller->goBack();
         // return $controller->render($controller->viewID, ['message' => 'Login via Openid.']);
     }
@@ -167,7 +167,7 @@ abstract class BaseOauth2Adaptor extends Component implements Oauth2Adaptor
 
     /**
      * @inheritdoc
-     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::getOpenUid()
+     * @see \thinker_g\UserAuth\interfaces\Oauth2Adaptor::fetchOpenUid()
      */
     abstract public function fetchOpenUid($accessToken);
 
