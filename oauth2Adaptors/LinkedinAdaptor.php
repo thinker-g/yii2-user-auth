@@ -106,7 +106,7 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
     }
 
     /**
-     * @override
+     * @inheritdoc
      * @param Controller $controller
      * @throws ForbiddenHttpException
      */
@@ -122,7 +122,7 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
     }
 
     /**
-     * @override
+     * @inheritdoc
      * @param array $accessToken
      * @param Controller $controller
      */
@@ -147,7 +147,7 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
     }
 
     /**
-     * @override
+     * @inheritdoc
      * @param array $accessToken
      * @param string $openUid
      * @param Controller $controller

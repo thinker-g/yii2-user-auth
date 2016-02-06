@@ -10,9 +10,9 @@
 
 namespace thinker_g\UserAuth\models\forms;
 
-use yii\base\Model;
 use thinker_g\UserAuth\interfaces\PasswordResettable;
 use thinker_g\UserAuth\models\ars\User;
+use yii\base\NotSupportedException;
 
 /**
  * Password reset request form

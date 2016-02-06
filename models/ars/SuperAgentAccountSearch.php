@@ -10,7 +10,6 @@
 
 namespace thinker_g\UserAuth\models\ars;
 
-use Yii;
 use yii\base\Model;
 use thinker_g\UserAuth\models\ars\traits\SuperAgentAccountSearch as SearchTrait;
 

@@ -12,8 +12,6 @@ namespace thinker_g\UserAuth\models\forms;
 
 use yii\base\InvalidParamException;
 use yii\base\NotSupportedException;
-use yii\base\Model;
-use Yii;
 use thinker_g\UserAuth\interfaces\PasswordResettable;
 
 /**

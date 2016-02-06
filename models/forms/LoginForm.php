@@ -13,7 +13,6 @@ namespace thinker_g\UserAuth\models\forms;
 use Yii;
 use yii\base\Model;
 use yii\base\NotSupportedException;
-use thinker_g\UserAuth\interfaces\CredentialIdentity;
 use thinker_g\UserAuth\interfaces\Authenticatable;
 use yii\web\IdentityInterface;
 

@@ -11,8 +11,6 @@
 namespace thinker_g\UserAuth\controllers\back;
 
 use thinker_g\UserAuth\controllers\BaseDefaultController;
-use yii\base\Exception;
-use yii\base\ErrorException;
 use Yii;
 
 /**

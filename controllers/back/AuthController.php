@@ -10,7 +10,6 @@
 
 namespace thinker_g\UserAuth\controllers\back;
 
-use Yii;
 use thinker_g\UserAuth\controllers\BaseAuthController;
 
 /**
