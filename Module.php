@@ -108,7 +108,7 @@ class Module extends \yii\base\Module
      */
     public function getVersion()
     {
-        return 'v0.0.1';
+        return 'v0.1.0';
     }
 
     /**
