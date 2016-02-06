@@ -9,7 +9,7 @@ interface Oauth2Adaptor
      * @param string $csrfToken
      * @return string Authentication URL of authorization server.
      */
-    public function getAuthUrl($csrfToken);
+    public function getAuthUrl($csrfToken = null);
 
     /**
      * Method called in the action of callback URL.

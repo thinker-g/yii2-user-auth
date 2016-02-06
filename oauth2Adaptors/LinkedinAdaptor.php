@@ -1,4 +1,9 @@
 <?php
+/**
+ * Linkedin Oauth2 adaptor.
+ * @since v0.1.0
+ * @version v0.1.0
+ */
 namespace thinker_g\UserAuth\oauth2Adaptors;
 
 use thinker_g\UserAuth\oauth2Adaptors\BaseOauth2Adaptor;
@@ -35,8 +40,8 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
     }
 
     /**
-     * @param string $assco
-     * @return array
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\oauth2Adaptors\BaseOauth2Adaptor::requestAccessToken()
      */
     public function requestAccessToken()
     {
@@ -68,6 +73,10 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
         ];
     }
 
+    /**
+     * @inheritdoc
+     * @see \thinker_g\UserAuth\oauth2Adaptors\BaseOauth2Adaptor::fetchOpenUid()
+     */
     public function fetchOpenUid($accessToken)
     {
         return $this->fetchResource('/v1/people/~:(id)', $accessToken['token'], 'id');
@@ -107,8 +116,7 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
 
     /**
      * @inheritdoc
-     * @param Controller $controller
-     * @throws ForbiddenHttpException
+     * @see \thinker_g\UserAuth\oauth2Adaptors\BaseOauth2Adaptor::handleAuthFailed()
      */
     public function handleAuthFailed(Controller $controller)
     {
@@ -122,9 +130,9 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
     }
 
     /**
+     * 
      * @inheritdoc
-     * @param array $accessToken
-     * @param Controller $controller
+     * @see \thinker_g\UserAuth\oauth2Adaptors\BaseOauth2Adaptor::handleGuestNoAcct()
      */
     public function handleGuestNoAcct(array $accessToken, Controller $controller)
     {
@@ -148,10 +156,7 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
 
     /**
      * @inheritdoc
-     * @param array $accessToken
-     * @param string $openUid
-     * @param Controller $controller
-     * @return string
+     * @see \thinker_g\UserAuth\oauth2Adaptors\BaseOauth2Adaptor::handleUserNoAcct()
      */
     public function handleUserNoAcct(array $accessToken, $openUid, Controller $controller)
     {

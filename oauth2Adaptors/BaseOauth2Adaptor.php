@@ -1,4 +1,23 @@
 <?php
+/**
+ * Base class of an oauth2 adaptor of the UserAuth module.
+ *
+ * By extending this class you just need to implement the four abstract methods, which are highly service depended,
+ * to integrate a new oauth2 service provider.
+ * For authenticating a user, main logics are already implemented.
+ *
+ * For signing-up or signing-in users, you may need to override some of the methods prefixed by "handle".
+ * By default, the "handle" methods only display a message that indicates the process you may expect.
+ * The contents returned by a handle method will be directly returned by the "auth back" action,
+ * (which in most time is the rendered page).
+ *
+ * You can still create your own adaptor. You just need to implement the interface `thinker_g\UserAuth\interfaces\Oauth2Adaptor`.
+ *
+ * @version v0.1.0
+ * @since v0.1.0
+ * @copyright Thinker_g
+ * @license MIT
+ */
 namespace thinker_g\UserAuth\oauth2Adaptors;
 
 use thinker_g\Helpers\controllers\ModelViewController as Controller;
@@ -13,17 +32,79 @@ use thinker_g\UserAuth\interfaces\Oauth2Adaptor;
 abstract class BaseOauth2Adaptor extends Component implements Oauth2Adaptor
 {
 
+    /**
+     * ID of this adaptor.
+     * @var string
+     */
     public $id;
+
+    /**
+     * Oauth2 client id.
+     * @var string
+     */
     public $clientId;
+
+    /**
+     * Oauth2 client secret.
+     * @var string
+     */
     public $clientSecret;
+
+    /**
+     * The authenticate api.
+     * @var string
+     */
     public $apiAuth;
+
+    /**
+     * The api to request access token.
+     * @var string
+     */
     public $apiAccToken;
+
+    /**
+     * The api to aquire resources.
+     * @var string
+     */
     public $apiRes;
+
+    /**
+     * The callback route that will be transformed to absolute url and send to auth api.
+     * @var string
+     */
     public $callbackRoute = ['oauth2/back'];
+
+    /**
+     * The parameter name of authorization code returned from auth url.
+     * @var sting
+     */
     public $authCodeParam = 'code';
+
+    /**
+     * The parameter name for CSRF validation, this will be added to auth url and the value will be send by as it is,
+     * for CSRF validation.
+     * @var string
+     */
     public $csrfParam = 'csrf_token';
+
+    /**
+     * Authorization scope, value depends on the oauth service requirement.
+     * @var string
+     */
     public $scope;
+
+    /**
+     * The external user account class.
+     * The class must be a Model and implement interface `thinker_g\UserAuth\interfaces\Oauth2Account`.
+     * @var string
+     */
     public $acctModelClass = 'thinker_g\UserAuth\models\ars\UserExtAccount';
+
+    /**
+     * The user identity class.
+     * The class must be a Model and implement interface `yii\web\IdentityInterface`.
+     * @var unknown
+     */
     public $userModelClass;
 
     private $_accessToken;
@@ -159,9 +240,11 @@ abstract class BaseOauth2Adaptor extends Component implements Oauth2Adaptor
     abstract public function getAuthUrl($csrfToken = null);
 
     /**
-     * @inheritdoc
-     * @param bool $assco Set to true to return an array, false to return an StdObject.
-     * @return mixed
+     * The method that actually send the request to get the access token.
+     * The return must be an array as ['accessToken' => TOKEN, 'expiresAt' => TIMESTAMP],
+     * where the "TOKEN" is the aquired access token,
+     * and the TIMESTAMP is an unix timestamp indicates the time this token expires.
+     * @return array
      */
     abstract public function requestAccessToken();
 

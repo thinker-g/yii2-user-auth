@@ -50,6 +50,7 @@ class Oauth2Controller extends ModelViewController
 
     /**
      * Action returned from authorization url.
+     * The "authBack" method of the specified adaptor will be invoked to handle the request.
      */
     public function actionBack()
     {
