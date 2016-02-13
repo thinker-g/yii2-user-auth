@@ -126,4 +126,18 @@ class Module extends \yii\base\Module
         }
         return $this->_oauthAdaptors[$adaptorId];
     }
+
+    /**
+     * Get all Oauth adaptors.
+     */
+    public function getOauthAdaptors()
+    {
+        foreach ($this->oauthAdaptors as $id => $config) {
+            if (isset($this->_oauthAdaptors[$id])) continue;
+            $adaptor = Yii::createObject($config);
+            Instance::ensure($adaptor, 'thinker_g\UserAuth\Interfaces\Oauth2Adaptor');
+            $this->_oauthAdaptors[$id] = $adaptor;
+        }
+        return $this->_oauthAdaptors;
+    }
 }

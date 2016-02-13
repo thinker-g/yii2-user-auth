@@ -21,10 +21,6 @@ use thinker_g\Helpers\controllers\ModelViewController;
  */
 class Oauth2Controller extends ModelViewController
 {
-    /**
-     * @var string
-     */
-    public $defaultAction = 'try-auth';
 
     /**
      * @inheritdoc
@@ -43,9 +39,9 @@ class Oauth2Controller extends ModelViewController
      * @param string $adaptorId
      * @return string
      */
-    public function actionTryAuth($adaptorId)
+    public function actionIndex($adaptorId = null)
     {
-        return $this->render($this->viewID, ['adaptor' => $this->getAdaptor($adaptorId)]);
+        return $this->render($this->viewID, ['adaptors' => $this->getAdaptor($adaptorId)]);
     }
 
     /**
@@ -68,9 +64,11 @@ class Oauth2Controller extends ModelViewController
      * @throws NotFoundHttpException
      * @return \thinker_g\UserAuth\interfaces\Oauth2Adaptor
      */
-    public function getAdaptor($adaptorId)
+    public function getAdaptor($adaptorId = null)
     {
-        if ($adaptor = $this->module->getOauthAdaptor($adaptorId)) {
+        if (is_null($adaptorId)) {
+            return $this->module->getOauthAdaptors();
+        } elseif ($adaptor = $this->module->getOauthAdaptor($adaptorId)) {
             return $adaptor;
         } else {
             throw new NotFoundHttpException('Adaptor <' . $adaptorId . '> not found.');
