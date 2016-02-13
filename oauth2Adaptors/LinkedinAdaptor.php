@@ -50,7 +50,7 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
             'grant_type' => 'authorization_code',
             'client_id' => $this->clientId,
             'client_secret' => $this->clientSecret,
-            'code' => Yii::$app->request->get('code'),
+            'code' => Yii::$app->request->get($this->authCodeParam),
             'redirect_uri' => $redirectUri
         ];
 
@@ -143,7 +143,6 @@ class LinkedinAdaptor extends BaseOauth2Adaptor
             'display_name' => $res['firstName'],
         ]); // TODO creation validation failed.
         $this->bindAccount($user, [
-            'user_id' => Yii::$app->user->id,
             'from_source' => $this->id,
             'open_uid' => $res['id'],
             'access_token' => $accessToken['token'],

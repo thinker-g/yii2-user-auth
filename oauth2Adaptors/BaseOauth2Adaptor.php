@@ -241,7 +241,7 @@ abstract class BaseOauth2Adaptor extends Component implements Oauth2Adaptor
 
     /**
      * The method that actually send the request to get the access token.
-     * The return must be an array as ['accessToken' => TOKEN, 'expiresAt' => TIMESTAMP],
+     * The return must be an array as ['token' => TOKEN, 'expiresAt' => TIMESTAMP],
      * where the "TOKEN" is the aquired access token,
      * and the TIMESTAMP is an unix timestamp indicates the time this token expires.
      * @return array
