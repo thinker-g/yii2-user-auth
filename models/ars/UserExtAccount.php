@@ -28,14 +28,6 @@ use Yii;
  */
 class UserExtAccount extends \yii\db\ActiveRecord
 {
-    public static $availableSources = [
-        'facebook' => 'Facebook',
-        'twitter' => 'Twitter',
-        'google_account' => 'Google Account',
-        'sina_weibo' => 'Sina Weibo',
-        'qq' => 'QQ',
-        'linkedin' => 'Linked In',
-    ];
 
     /**
      * @inheritdoc
@@ -83,5 +75,17 @@ class UserExtAccount extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
+    }
+
+    public static function availableSources()
+    {
+        return [
+            'facebook' => 'Facebook',
+            'twitter' => 'Twitter',
+            'google_account' => 'Google Account',
+            'sina_weibo' => 'Sina Weibo',
+            'qq' => 'QQ',
+            'linkedin' => 'Linked In',
+        ];
     }
 }

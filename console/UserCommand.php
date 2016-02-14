@@ -111,7 +111,7 @@ class UserCommand extends Controller
     {
         $superAgentAcct = Yii::createObject($this->agentAcctModelClass);
         // $superAgentAcct = new \thinker_g\UserAuth\models\SuperAgentAccount();
-        if ($this->agent_type && !array_key_exists($this->agent_type, $superAgentAcct::$availableSources)) {
+        if ($this->agent_type && !array_key_exists($this->agent_type, $superAgentAcct::availableSources())) {
             $notice = "Account type: {$this->agent_type} cannot be found in current account model, continue?";
             if (!$this->confirm(Console::ansiFormat($notice, [Console::FG_YELLOW]), false)) {
                 $this->stdout("User canceled." . PHP_EOL, Console::FG_GREEN);
@@ -145,7 +145,7 @@ class UserCommand extends Controller
         ->select(['from_source'])
         ->where([
             'user_id' => $user_id,
-            'from_source' => $superAgentAcct::$availableSources,
+            'from_source' => $superAgentAcct::availableSources(),
         ])
         ->column();
         $this->stdout("Agent accounts granted to user <ID: {$user_id}>:\n\t");
@@ -168,7 +168,7 @@ class UserCommand extends Controller
     {
         $superAgentAcct = Yii::createObject($this->agentAcctModelClass);
         // $superAgentAcct = new \thinker_g\UserAuth\models\SuperAgentAccount();
-        if (!array_key_exists($agent_type, $superAgentAcct::$availableSources)) {
+        if (!array_key_exists($agent_type, $superAgentAcct::availableSources())) {
             $warning = "Account type: {$agent_type} cannot be found in current account model.\n";
             $this->stdout($warning, Console::FG_YELLOW);
         }
