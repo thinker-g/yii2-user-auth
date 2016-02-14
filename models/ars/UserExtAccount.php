@@ -30,14 +30,6 @@ use thinker_g\UserAuth\interfaces\Oauth2Account;
  */
 class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
 {
-    public static $availableSources = [
-        'facebook' => 'Facebook',
-        'twitter' => 'Twitter',
-        'google_account' => 'Google Account',
-        'sina_weibo' => 'Sina Weibo',
-        'qq' => 'QQ',
-        'linkedin' => 'Linked In',
-    ];
 
     /**
      * @inheritdoc
@@ -131,5 +123,17 @@ class UserExtAccount extends \yii\db\ActiveRecord implements Oauth2Account
     public static function findByUserId($userId, $from_source)
     {
         return self::findOne(['user_id' => $userId, 'from_source' => $from_source]);
+    }
+
+    public static function availableSources()
+    {
+        return [
+            'facebook' => 'Facebook',
+            'twitter' => 'Twitter',
+            'google_account' => 'Google Account',
+            'sina_weibo' => 'Sina Weibo',
+            'qq' => 'QQ',
+            'linkedin' => 'Linked In',
+        ];
     }
 }
